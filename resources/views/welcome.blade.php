@@ -77,7 +77,6 @@
 
             $.post(url, dataCheck)
             .done(function (response) {
-                console.log(response)
                 if(response.result) {
                     $('#register').prop('disabled', false)
                     swal.fire({
@@ -101,9 +100,9 @@
                         showConfirmButton:true,
                         confirmButtonText:'Oss!'
                     })
-
-                    $(this).val('')
                 }
+
+                $(this).val('')
             })
         })
     </script>
