@@ -29,3 +29,7 @@ Route::group(['prefix' => 'usuario'], function(){
     Route::post('crear', [\App\Http\Controllers\UsuariosController::class,'createUser'])->name('usuario.crearUsuario');
    Route::post('revisar', [\App\Http\Controllers\UsuariosController::class, 'checkRut'])->name('usuario.checkRut');
 });
+
+Route::group(['prefix' => 'informaciones'], function(){
+    Route::get('privacidad',[\App\Http\Controllers\SystemController::class, 'privacidad'])->name('informaciones.privacidad');
+});

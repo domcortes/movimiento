@@ -31,4 +31,8 @@ class SystemController extends Controller
 
         }
     }
+
+    public function privacidad(){
+        return view('informaciones.privacidad');
+    }
 }
