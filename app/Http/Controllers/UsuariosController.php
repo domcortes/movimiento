@@ -7,6 +7,7 @@ use App\Models\User;
 use http\Env\Response;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsuariosController extends Controller
 {
@@ -140,6 +141,25 @@ class UsuariosController extends Controller
             ];
 
             return response()->json($response);
+        }
+    }
+
+    public function createUser(Request $request){
+        try {
+            $alumnoNuevo = new User();
+            $alumnoNuevo->name = $request->name;
+            $alumnoNuevo->email = $request->email;
+            $alumnoNuevo->rut = $request->rut;
+            $alumnoNuevo->password = Hash::make($request->rut);
+            $alumnoNuevo->telefono = $request->telefono;
+            $alumnoNuevo->role = $request->rol;
+            $alumnoNuevo->save();
+
+            return redirect()->back()->with('success', ucfirst($request->rol).' creado correctamente');
+        } catch (QueryException $queryException){
+            return redirect()->back()->with('warning', 'Error al intentar guardar: '.$queryException->getMessage());
+        } catch (\ErrorException $errorException){
+            return redirect()->back()->with('warning', 'Error al error general: '.$errorException->getMessage());
         }
     }
 }

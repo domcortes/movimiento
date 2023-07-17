@@ -34,6 +34,16 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function hasRoles(array $roles){
+        foreach ($roles as $role){
+            if ($this->role === $role){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * The attributes that should be cast.
      *
@@ -45,5 +55,9 @@ class User extends Authenticatable
 
     public function pagos(){
         return $this->hasMany(PagosController::class,'id_usuario','id');
+    }
+
+    public function adminlte_desc(){
+        return ucfirst(auth()->user()->role);
     }
 }
