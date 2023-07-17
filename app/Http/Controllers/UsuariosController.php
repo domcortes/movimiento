@@ -155,6 +155,11 @@ class UsuariosController extends Controller
             $alumnoNuevo->role = $request->rol;
             $alumnoNuevo->save();
 
+            $telefono = [
+                $request->telefono
+            ];
+            SystemController::whatsappNotification('bienvenida', $telefono);
+
             return redirect()->back()->with('success', ucfirst($request->rol).' creado correctamente');
         } catch (QueryException $queryException){
             return redirect()->back()->with('warning', 'Error al intentar guardar: '.$queryException->getMessage());

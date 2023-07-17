@@ -35,4 +35,50 @@ class SystemController extends Controller
     public function privacidad(){
         return view('informaciones.privacidad');
     }
+
+    static public function whatsappNotification($tipo, $telefonos = []){
+        try {
+            $url = 'https://graph.facebook.com/v17.0/112648021891240/messages';
+            $token = 'EAAN7B2UHoJwBAMtOmn8TuREfRB97OlZCy2qgM2BmgrWLs0BZBa5ZCfGc7xKZC5lQe5GXHi3WOAA20keGDZBs2SXmPFLf09FqMhhGfESBDhKOvrgW4pitex9wJQoAXUU8c98ZC1LCtdLsCurRwTAfIXi336kAMTkZCCreRWrbWJtfUJlgwUZAj7ge7ZBpIlQZCQ0bfY9AlEi2dYqgx13SvDBedS';
+
+            foreach ($telefonos as $telefono){
+                switch ($tipo){
+                    case 'bienvenida':
+                        $mensaje =''
+                            .'{'
+                            .'"messaging_product": "whatsapp", '
+                            .'"to": "'.$telefono.'", '
+                            .'"type": "template",'
+                            .'"template": '
+                            .'{'
+                            .'  "name": "bienvenida",'
+                            .'  "language":{ "code": "en_US" },'
+                            .'} '
+                            .'}';
+                        break;
+                }
+
+                $header = [
+                    'Authorization: Bearer '.$token,
+                    "Content-Type: application/json",
+                ];
+
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $mensaje);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+
+                $response = json_decode(curl_exec($curl), true);
+                print_r($response);
+
+                $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                curl_close($curl);
+            }
+
+
+        } catch (\ErrorException $error){
+            echo $error->getMessage();
+        }
+    }
 }
