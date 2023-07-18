@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Asistencias extends Model
 {
     use HasFactory;
+
+    public $timestamps = true;
 }

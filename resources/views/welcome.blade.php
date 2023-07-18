@@ -38,8 +38,7 @@
         <div class="form-row">
             <div class="col-md-6"></div>
             <div class="col-md-6">
-                <button class="btn btn-primary float-right" id="register" disabled>OSS!</button>
-                <a href="{{ route('login') }}" class="btn btn-dark">Intranet</a>
+                <a href="{{ route('login') }}" class="btn btn-dark float-right">Intranet</a>
             </div>
         </div>
     </form>
@@ -67,10 +66,12 @@
         }
 
         $('#rut').on('change', function(){
+            let fecha = new Date().toISOString()
             let dataCheck = {
                 _token: '{{ csrf_token() }}',
                 rut: $(this).val(),
-                date: new Date().toISOString().split('T')[0]
+                date: fecha.split('T')[0],
+                dateTime: fecha.split('T')[0] + ' ' + fecha.split('T')[1].slice(0,-5)
             }
 
             let url = '{{ route('usuario.checkRut') }}';
@@ -87,7 +88,40 @@
                         title: 'Mensaje de Nataleglock',
                         text: response.message,
                         showConfirmButton:true,
-                        confirmButtonText:'Oss!'
+                        showCancelButton:true,
+                        confirmButtonText:'Oss!',
+                        cancelButtonText:'Cancelar'
+                    }).then((result) => {
+                        if(result.value){
+                            let urlAsistencia = '{{ route('usuario.marcarAsistencia') }}'
+
+                            $.post(urlAsistencia, dataCheck)
+                            .done(function (responseAsistencia) {
+                                if(responseAsistencia.result){
+                                    swal.fire({
+                                        imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
+                                        imageWidth: 100,
+                                        imageHeight: 100,
+                                        imageAlt: 'Custom image',
+                                        title: 'Mensaje de Nataleglock',
+                                        text: responseAsistencia.message,
+                                        showConfirmButton:true,
+                                        confirmButtonText:'Oss!',
+                                    });
+                                }
+                            })
+                        } else {
+                            swal.fire({
+                                imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
+                                imageWidth: 100,
+                                imageHeight: 100,
+                                imageAlt: 'Custom image',
+                                title: 'Mensaje de Nataleglock',
+                                text: 'Has cancelado tu ingreso a nuestra escuela',
+                                showConfirmButton:true,
+                                confirmButtonText:'Oss!',
+                            });
+                        }
                     })
                 } else {
                     swal.fire({

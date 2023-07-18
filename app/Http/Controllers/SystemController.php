@@ -17,8 +17,8 @@ class SystemController extends Controller
             case 'no existe alumno':
                 return 'Alumno no se encuentra registrado en Nataleglock, por favor contacta con el profesor';
 
-            case 'asistencia ok':
-                return 'Registro de asistencia creado correctamente';
+            case 'asistenciaOk':
+                return 'Registro de asistencia creado correctamente. Recuerda nuestras normas y disfruta tu entrenamiento';
 
             case 'queryException':
                 return 'Error al registrar: '.$message;

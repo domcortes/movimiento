@@ -114,16 +114,68 @@ class UsuariosController extends Controller
                 return response()->json($response);
             }
 
+            $response = [
+                'result' => true,
+                'message' => '¿Deseas marcar tu asistencia?'
+            ];
+
+            return response()->json($response);
+
+        } catch (QueryException $queryException){
+            $response = [
+                'result' => false,
+                'message' => SystemController::messagesResponse('queryException', $queryException->getMessage())
+            ];
+
+            return response()->json($response);
+        } catch (\ErrorException $errorException){
+            $response = [
+                'result' => false,
+                'message' => SystemController::messagesResponse('errorException', $errorException->getMessage())
+            ];
+
+            return response()->json($response);
+        }
+    }
+
+    public function crearAsistencia(Request $request){
+        try {
+            $usuario = User::where('rut', $request->rut)->first();
+
+            if($usuario === null){
+                $response = [
+                    'result' => false,
+                    'message' => SystemController::messagesResponse('no existe alumno')
+                ];
+
+                return response()->json($response);
+            }
+
+            $asistenciaDiaria = Asistencias::where('fecha_asistencia', $request->date)
+                ->where('id_usuario', $usuario->id)
+                ->get();
+
+            if(count($asistenciaDiaria) > 0){
+                $response = [
+                    'result' => false,
+                    'message' => SystemController::messagesResponse('limiteAsistencia')
+                ];
+
+                return response()->json($response);
+            }
+
             $asistencia = new Asistencias();
             $asistencia->id_usuario = $usuario->id;
             $asistencia->id_pago = null;
             $asistencia->fecha_asistencia = $request->date;
             $asistencia->clase_prueba = false;
+            $asistencia->created_at = $request->dateTime;
+            $asistencia->updated_at = $request->dateTime;
             $asistencia->save();
 
             $response = [
                 'result' => true,
-                'message' => SystemController::messagesResponse('asistencia ok')
+                'message' => SystemController::messagesResponse('asistenciaOk')
             ];
 
             return response()->json($response);
