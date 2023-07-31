@@ -38,7 +38,7 @@
         <div class="form-row">
             <div class="col-md-6"></div>
             <div class="col-md-6">
-                <a href="{{ route('login') }}" class="btn btn-dark float-right">Intranet</a>
+                <a href="{{ route('login') }}" class="btn btn-dark float-right disabled" disabled="true">Intranet</a>
             </div>
         </div>
     </form>
@@ -54,24 +54,25 @@
 @stop
 
 @section('js')
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-
         function limpiezaRut(event){
             let rut = $('#rut').val();
             let rutNoSpaces = rut.replaceAll(' ','');
             let rutNoComa = rutNoSpaces.replaceAll(',','');
             let rutNoPoint = rutNoComa.replaceAll('.','');
-
             $('#rut').val(rutNoPoint)
         }
 
         $('#rut').on('change', function(){
             let fecha = new Date().toISOString()
+            let recaptcha = '{{ env('RECAPTCHA_SITIO') }}'
             let dataCheck = {
                 _token: '{{ csrf_token() }}',
                 rut: $(this).val(),
                 date: fecha.split('T')[0],
-                dateTime: fecha.split('T')[0] + ' ' + fecha.split('T')[1].slice(0,-5)
+                dateTime: fecha.split('T')[0] + ' ' + fecha.split('T')[1].slice(0,-5),
+                recaptcha: recaptcha
             }
 
             let url = '{{ route('usuario.checkRut') }}';
