@@ -166,6 +166,7 @@ class UsuariosController extends Controller
                 $response = [
                     'result' => true,
                     'pagos' => $pagos,
+                    'alerta' => true,
                     'message' => SystemController::messagesResponse('pendientePago')
                 ];
 
@@ -178,6 +179,7 @@ class UsuariosController extends Controller
                 $response = [
                     'result' => true,
                     'pagos' => $pagos,
+                    'alerta' => false,
                     'message' => SystemController::messagesResponse('asistenciaOk')
                 ];
 

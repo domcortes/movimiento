@@ -100,6 +100,7 @@
                             .done(function (responseAsistencia) {
                                 console.log(responseAsistencia)
                                 if(responseAsistencia.result){
+                                    let soundfile = "{{ secure_url('/') }}/vendor/adminlte/dist/sound/redalert.mp3";
                                     swal.fire({
                                         imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
                                         imageWidth: 100,
@@ -109,6 +110,12 @@
                                         html: responseAsistencia.message,
                                         showConfirmButton:true,
                                         confirmButtonText:'Oss!',
+                                        onOpen: function () {
+                                            if(responseAsistencia.alerta){
+                                                var audplay = new Audio(soundfile)
+                                                audplay.play();
+                                            }
+                                        },
                                     });
                                 }
                             })
