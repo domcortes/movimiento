@@ -3,7 +3,7 @@
 @section('content')
     <br>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card">
                 <div class="card-header bg-dark">
                     <div class="row">
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header bg-danger">
                     Mensualidades pendientes
