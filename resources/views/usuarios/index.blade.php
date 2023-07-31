@@ -35,7 +35,7 @@
                                 <td><a href="tel:+{{ $alumno->telefono }}">+{{ $alumno->telefono }}</a></td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="https://api.whatsapp.com/send?phone=56939089104" class="btn btn-success"><i class="fa-brands fa-whatsapp"></i></a>
+                                        <a href="https://api.whatsapp.com/send?phone={{ $alumno->telefono }}" class="btn btn-success"><i class="fa-brands fa-whatsapp"></i></a>
                                     </div>
                                 </td>
                             </tr>

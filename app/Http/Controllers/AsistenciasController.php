@@ -16,7 +16,8 @@ class AsistenciasController extends Controller
      */
     public function index()
     {
-        echo 'aqui van las asistencias';
+        $asistencias = Asistencias::all();
+        return view('asistencias.index', compact('asistencias'));
     }
 
     /**
