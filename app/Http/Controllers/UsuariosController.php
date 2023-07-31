@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asistencias;
+use App\Models\Pagos;
 use App\Models\User;
 use http\Env\Response;
 use Illuminate\Database\QueryException;
@@ -105,15 +106,6 @@ class UsuariosController extends Controller
                 ->where('id_usuario', $usuario->id)
                 ->get();
 
-            if(count($asistenciaDiaria) > 0){
-                $response = [
-                    'result' => false,
-                    'message' => SystemController::messagesResponse('limiteAsistencia')
-                ];
-
-                return response()->json($response);
-            }
-
             $response = [
                 'result' => true,
                 'message' => '¿Deseas marcar tu asistencia?'
@@ -155,30 +147,45 @@ class UsuariosController extends Controller
                 ->where('id_usuario', $usuario->id)
                 ->get();
 
-            if(count($asistenciaDiaria) > 0){
-                $response = [
-                    'result' => false,
-                    'message' => SystemController::messagesResponse('limiteAsistencia')
-                ];
-
-                return response()->json($response);
-            }
+            $pagos = Pagos::where('id_usuario', $usuario->id)
+                ->where('fecha_inicio_mensualidad','<=', $request->date)
+                ->where('fecha_termino_mensualidad','>=', $request->date)
+                ->first();
 
             $asistencia = new Asistencias();
             $asistencia->id_usuario = $usuario->id;
-            $asistencia->id_pago = null;
             $asistencia->fecha_asistencia = $request->date;
             $asistencia->clase_prueba = false;
             $asistencia->created_at = $request->dateTime;
             $asistencia->updated_at = $request->dateTime;
-            $asistencia->save();
 
-            $response = [
-                'result' => true,
-                'message' => SystemController::messagesResponse('asistenciaOk')
-            ];
 
-            return response()->json($response);
+            if($pagos === null){
+                $asistencia->id_pago = null;
+                $asistencia->save();
+                $response = [
+                    'result' => true,
+                    'pagos' => $pagos,
+                    'message' => SystemController::messagesResponse('pendientePago')
+                ];
+
+
+                return response()->json($response);
+            } else {
+                $asistencia->id_pago = $pagos->id;
+                $asistencia->save();
+
+                $response = [
+                    'result' => true,
+                    'pagos' => $pagos,
+                    'message' => SystemController::messagesResponse('asistenciaOk')
+                ];
+
+
+                return response()->json($response);
+            }
+
+
         } catch (QueryException $queryException){
             $response = [
                 'result' => false,

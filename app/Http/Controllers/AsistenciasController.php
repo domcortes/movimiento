@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asistencias;
+use App\Models\Pagos;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -49,10 +50,25 @@ class AsistenciasController extends Controller
                 $asistencia->clase_prueba = false;
                 $asistencia->save();
 
-                $response = [
-                    'result' => true,
-                    'message' => SystemController::messagesResponse('asistencia ok')
-                ];
+                $pagos = Pagos::where('id_usuario', $usuario->id)
+                    ->where('fecha_inicio_mensualidad','<=', $request->date)
+                    ->where('fecha_termino_mensualidad','>=', $request->date)
+                    ->first();
+
+                if($pagos === null){
+                    $response = [
+                        'result' => true,
+                        'pagos' => $pagos,
+                        'message' => SystemController::messagesResponse('pendientePago')
+                    ];
+                } else {
+                    $response = [
+                        'result' => true,
+                        'pagos' => $pagos,
+                        'message' => SystemController::messagesResponse('asistencia ok')
+                    ];
+                }
+
             } else {
                 $response = [
                     'result' => false,

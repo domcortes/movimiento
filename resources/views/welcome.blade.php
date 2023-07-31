@@ -97,6 +97,7 @@
 
                             $.post(urlAsistencia, dataCheck)
                             .done(function (responseAsistencia) {
+                                console.log(responseAsistencia)
                                 if(responseAsistencia.result){
                                     swal.fire({
                                         imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
@@ -104,7 +105,7 @@
                                         imageHeight: 100,
                                         imageAlt: 'Custom image',
                                         title: 'Mensaje de Nataleglock',
-                                        text: responseAsistencia.message,
+                                        html: responseAsistencia.message,
                                         showConfirmButton:true,
                                         confirmButtonText:'Oss!',
                                     });
