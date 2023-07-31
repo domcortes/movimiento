@@ -29,6 +29,7 @@ Route::group(['prefix' => 'usuario'], function(){
     Route::post('crear', [\App\Http\Controllers\UsuariosController::class,'createUser'])->name('usuario.crearUsuario');
    Route::post('revisar', [\App\Http\Controllers\UsuariosController::class, 'checkRut'])->name('usuario.checkRut');
    Route::post('marcar-asistencia', [\App\Http\Controllers\UsuariosController::class, 'crearAsistencia'])->name('usuario.marcarAsistencia');
+   Route::post('check-deportes', [\App\Http\Controllers\UsuariosController::class, 'revisarDeportes'])->name('usuario.checkMensualidad');
 });
 
 Route::group(['prefix' => 'informaciones'], function(){

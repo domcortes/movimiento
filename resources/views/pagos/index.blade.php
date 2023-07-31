@@ -153,5 +153,19 @@
             $('#inicioMensualidad').val(inicioMensualidad.format('YYYY-MM-DD'));
             $('#terminoMensualidad').val(fechaCalculada.format('YYYY-MM-DD'));
         })
+
+        $('#alumno').on('change', function(){
+            let data = {
+                _token: '{{ csrf_token() }}',
+                alumno: $(this).val()
+            }
+
+            let url = '{{ route('usuario.checkMensualidad') }}'
+
+            $.post(url, data)
+            .done(function (response) {
+                $('#cantidadClases').val(response.clases)
+            })
+        })
     </script>
 @endsection

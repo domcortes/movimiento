@@ -227,4 +227,32 @@ class UsuariosController extends Controller
             return redirect()->back()->with('warning', 'Error al error general: '.$errorException->getMessage());
         }
     }
+
+    public function revisarDeportes(Request $request){
+        $idAlumno = $request->alumno;
+        $nogi = 0;
+        $jiujitsu = 0;
+        $mma = 0;
+
+        $alumno = User::where('id', $idAlumno)->first();
+
+        if(in_array('nogi', json_decode($alumno->disciplina))){
+            $nogi = 8;
+        }
+
+        if(in_array('jiujitsu', json_decode($alumno->disciplina))){
+            $jiujitsu = 12;
+        }
+
+        if(in_array('mma', json_decode($alumno->disciplina))){
+            $mma = 12;
+        }
+
+        $clases = $nogi + $jiujitsu + $mma;
+
+        return response()->json([
+            'response' => true,
+            'clases' => $clases
+        ]);
+    }
 }
