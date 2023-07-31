@@ -122,6 +122,7 @@
                                     <label for="">Medio de pago</label>
                                     <select name="medioPago" id="medioPago" class="form-control" required>
                                         <option value="">Selecciona un medio de pago</option>
+                                        <option value="canje">Canje</option>
                                         <option value="transferencia">Transferencia</option>
                                         <option value="efectivo">Efectivo</option>
                                         <option value="e-pago">Pago por terminal electronico</option>
