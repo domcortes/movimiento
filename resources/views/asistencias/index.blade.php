@@ -17,22 +17,16 @@
                         <thead>
                             <tr>
                                 <th>Alumno</th>
-                                <th>Fecha de pago</th>
-                                <th>Fecha de vencimiento</th>
-                                <th>Cantidad clases</th>
-                                <th>Tipo Pago</th>
-                                <th>Acciones</th>
+                                <th>Fecha de asistencia</th>
+                                <th>Clase de prueba</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach($asistencias as $asistencia)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $asistencia->usuario->name }}</td>
+                                <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($asistencia->fecha_asistencia) }}</td>
+                                <td>{!! \App\Http\Controllers\SystemController::botonVerdaderoFalso($asistencia->clasePrueba) !!}</td>
                             </tr>
                         @endforeach
                         </tbody>

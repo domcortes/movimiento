@@ -12,6 +12,16 @@ class SystemController extends Controller
         return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
     }
 
+    static public function botonVerdaderoFalso($parametro)
+    {
+        switch ($parametro){
+            case true:
+                return '<button class="btn btn-success">Prueba</button>';
+            case false:
+                return '<button class="btn btn-primary">Clase Regular</button>';
+        }
+    }
+
     static public function messagesResponse($tipo, $message = null){
         switch ($tipo){
             case 'no existe alumno':

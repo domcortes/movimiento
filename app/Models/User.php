@@ -54,7 +54,11 @@ class User extends Authenticatable
     ];
 
     public function pagos(){
-        return $this->hasMany(PagosController::class,'id_usuario','id');
+        return $this->hasMany(Pagos::class,'id_usuario','id');
+    }
+
+    public function asistencia(){
+        return $this->hasMany(Asistencias::class, 'id_usuario','id');
     }
 
     public function adminlte_desc(){

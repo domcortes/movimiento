@@ -10,4 +10,8 @@ class Asistencias extends Model
     use HasFactory;
 
     public $timestamps = true;
+
+    public function usuario(){
+        return $this->belongsTo(User::class, 'id_usuario', 'id');
+    }
 }
