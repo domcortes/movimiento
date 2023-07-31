@@ -62,19 +62,19 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Nombre de usuario</label>
                                     <input type="text" name="name" id="name" class="form-control" required placeholder="al menos un nombre y un apellido">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Email</label>
                                     <input type="email" name="email" id="email" class="form-control" required placeholder="emailusuario@email.com">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Deporte</label>
                                     <select name="deporte[]" id="deporte" class="form-control deporte" multiple="multiple">
@@ -82,6 +82,15 @@
                                         <option value="nogi">Nogi</option>
                                         <option value="mma">MMA</option>
                                         <option value="fisico">Acondicionamiento Fisico</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Tipo de matricula</label>
+                                    <select name="tipoMatricula" id="tipoMatricula" class="form-control">
+                                        <option value="adulto">Adulto</option>
+                                        <option value="niños">Niño</option>
                                     </select>
                                 </div>
                             </div>

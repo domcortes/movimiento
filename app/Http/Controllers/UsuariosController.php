@@ -213,6 +213,7 @@ class UsuariosController extends Controller
             $alumnoNuevo->telefono = $request->telefono;
             $alumnoNuevo->role = $request->rol;
             $alumnoNuevo->disciplina = json_encode($request->deporte);
+            $alumnoNuevo->tipo_matricula = $request->tipoMatricula;
             $alumnoNuevo->save();
 
             $telefono = [
