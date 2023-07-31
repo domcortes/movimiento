@@ -22,6 +22,7 @@
                             <th>Nombre Alumno</th>
                             <th>Rol</th>
                             <th>Email</th>
+                            <th>Deportes</th>
                             <th>Teléfono</th>
                             <th>Acciones</th>
                         </tr>
@@ -32,6 +33,7 @@
                                 <td>{{ $alumno->name }}</td>
                                 <td>{{ $alumno->role }}</td>
                                 <td><a href="mailto:{{ $alumno->email }}">{{ $alumno->email }}</a></td>
+                                <td>{{ $alumno->disciplina }}</td>
                                 <td><a href="tel:+{{ $alumno->telefono }}">+{{ $alumno->telefono }}</a></td>
                                 <td>
                                     <div class="btn-group">
@@ -82,6 +84,7 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
                         <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
