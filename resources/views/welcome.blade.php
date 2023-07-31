@@ -31,7 +31,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="">Rut</label>
-                    <input type="text" name="rut" id="rut" class="form-control" onKeyPress="return limpiezaRut(event)" placeholder="123456789-0">
+                    <input type="text" name="rut" id="rut" class="form-control" onKeyPress="return limpiezaRut(event)" placeholder="123456789-0" autocomplete="off">
                 </div>
             </div>
         </div>
