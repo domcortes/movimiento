@@ -60,19 +60,28 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Nombre de usuario</label>
                                     <input type="text" name="name" id="name" class="form-control" required placeholder="al menos un nombre y un apellido">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Email</label>
                                     <input type="email" name="email" id="email" class="form-control" required placeholder="emailusuario@email.com">
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Deporte</label>
+                                    <select name="deporte[]" id="deporte" class="form-control deporte" multiple="multiple">
+                                        <option value="jiujitsu">Jiujitsu</option>
+                                        <option value="nogi">Nogi</option>
+                                        <option value="mma">MMA</option>
+                                    </select>
+                                </div>
+                            </div>
                         <div class="form-row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -111,6 +120,12 @@
     @include('js.datatable')
     @include('js.toastr')
     <script>
+        $('.deporte').select2({
+            width:'100%',
+            height: 'resolve',
+            placeholder: 'Selecciona las disciplinas'
+        })
+
         function limpiezaRut(event){
             let rut = $('#rut').val();
             let rutNoSpaces = rut.replaceAll(' ','');
