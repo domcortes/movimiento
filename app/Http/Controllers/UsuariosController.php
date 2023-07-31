@@ -233,6 +233,7 @@ class UsuariosController extends Controller
         $nogi = 0;
         $jiujitsu = 0;
         $mma = 0;
+        $fisico = 0;
 
         $alumno = User::where('id', $idAlumno)->first();
 
@@ -248,7 +249,11 @@ class UsuariosController extends Controller
             $mma = 12;
         }
 
-        $clases = $nogi + $jiujitsu + $mma;
+        if(in_array('mma', json_decode($alumno->disciplina))){
+            $fisico = 0;
+        }
+
+        $clases = $nogi + $jiujitsu + $mma + $fisico;
 
         return response()->json([
             'response' => true,

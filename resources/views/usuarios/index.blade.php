@@ -81,6 +81,7 @@
                                         <option value="jiujitsu">Jiujitsu</option>
                                         <option value="nogi">Nogi</option>
                                         <option value="mma">MMA</option>
+                                        <option value="fisico">Acondicionamiento Fisico</option>
                                     </select>
                                 </div>
                             </div>
