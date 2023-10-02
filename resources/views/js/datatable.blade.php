@@ -244,8 +244,8 @@
                 "renameTitle": "Cambiar Nombre Estado"
             }
         },
-        "searching": false,
-        "paging": false,
+        "searching": true,
+        "paging": true,
     });
 
 </script>
