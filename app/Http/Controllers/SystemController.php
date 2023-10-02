@@ -40,7 +40,7 @@ class SystemController extends Controller
                 return 'Usted ya registro una asistencia para el dia de hoy, contacte con el profesor';
 
             case 'pendientePago':
-                return '<span class="text-danger">Usted se encuentra con una mensualidad pendiente</span><br>Tiene un periodo maximo de 2 clases para regularizar su mensualidad con un recargo de $5.000 por clase';
+                return '<strong class="text-danger">Usted se encuentra con una mensualidad pendiente</strong><br><br>Tiene un periodo maximo de 2 clases para regularizar su mensualidad con un recargo de $5.000 por clase';
 
         }
     }

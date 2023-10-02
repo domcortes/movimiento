@@ -158,6 +158,7 @@ class UsuariosController extends Controller
             $asistencia->clase_prueba = false;
             $asistencia->created_at = $request->dateTime;
             $asistencia->updated_at = $request->dateTime;
+            $asistencia->deporte = $request->sport;
 
 
             if($pagos === null){

@@ -36,6 +36,20 @@
             </div>
         </div>
         <div class="form-row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="">Disciplina</label>
+                    <select name="sport" id="sport" class="form-control">
+                        <option value="">Selecciona una disciplina</option>
+                        <option value="jiujitsu">Jiujitsu</option>
+                        <option value="nogi">NOGI</option>
+                        <option value="mma">MMA</option>
+                        <option value="fisico">Acondicionamiento Físico</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
             <div class="col-md-6"></div>
             <div class="col-md-6">
                 <a href="{{ route('login') }}" class="btn btn-dark float-right disabled" disabled="true">Intranet</a>
@@ -65,57 +79,82 @@
         }
 
         $('#rut').on('change', function(){
+            marcarAsistencia()
+        })
+
+        $('#sport').on('change', function(){
+            marcarAsistencia()
+        })
+
+        function marcarAsistencia(){
             let fecha = new Date().toISOString()
             let recaptcha = '{{ env('RECAPTCHA_SITIO') }}'
+            let sport = $('#sport').val();
+            let rut = $('#rut').val();
+
             let dataCheck = {
                 _token: '{{ csrf_token() }}',
-                rut: $(this).val(),
+                rut: rut,
                 date: fecha.split('T')[0],
                 dateTime: fecha.split('T')[0] + ' ' + fecha.split('T')[1].slice(0,-5),
+                sport: sport,
                 recaptcha: recaptcha
             }
 
             let url = '{{ route('usuario.checkRut') }}';
 
-            $.post(url, dataCheck)
-            .done(function (response) {
-                if(response.result) {
-                    $('#register').prop('disabled', false)
-                    swal.fire({
-                        imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
-                        imageWidth: 100,
-                        imageHeight: 100,
-                        imageAlt: 'Custom image',
-                        title: 'Mensaje de Nataleglock',
-                        text: response.message,
-                        showConfirmButton:true,
-                        showCancelButton:true,
-                        confirmButtonText:'Oss!',
-                        cancelButtonText:'Cancelar'
-                    }).then((result) => {
-                        if(result.value){
-                            let urlAsistencia = '{{ route('usuario.marcarAsistencia') }}'
+            if(sport !== '' && rut !== ''){
+                $.post(url, dataCheck)
+                    .done(function (response) {
+                        if(response.result) {
+                            $('#register').prop('disabled', false)
+                            swal.fire({
+                                imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
+                                imageWidth: 100,
+                                imageHeight: 100,
+                                imageAlt: 'Custom image',
+                                title: 'Mensaje de Nataleglock',
+                                text: response.message,
+                                showConfirmButton:true,
+                                showCancelButton:true,
+                                confirmButtonText:'Oss!',
+                                cancelButtonText:'Cancelar'
+                            }).then((result) => {
+                                if(result.value){
+                                    let urlAsistencia = '{{ route('usuario.marcarAsistencia') }}'
 
-                            $.post(urlAsistencia, dataCheck)
-                            .done(function (responseAsistencia) {
-                                console.log(responseAsistencia)
-                                if(responseAsistencia.result){
-                                    let soundfile = "{{ secure_url('/') }}/vendor/adminlte/dist/sound/redalert.mp3";
+                                    $.post(urlAsistencia, dataCheck)
+                                        .done(function (responseAsistencia) {
+                                            if(responseAsistencia.result){
+                                                let soundfile = "{{ secure_url('/') }}/vendor/adminlte/dist/sound/redalert.mp3";
+                                                swal.fire({
+                                                    imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
+                                                    imageWidth: 100,
+                                                    imageHeight: 100,
+                                                    imageAlt: 'Custom image',
+                                                    title: 'Mensaje de Nataleglock',
+                                                    html: responseAsistencia.message,
+                                                    showConfirmButton:true,
+                                                    confirmButtonText:'Oss!',
+                                                    onOpen: function () {
+                                                        if(responseAsistencia.alerta){
+                                                            var audplay = new Audio(soundfile)
+                                                            audplay.play();
+                                                        }
+                                                    },
+                                                });
+                                            }
+                                        })
+                                } else {
                                     swal.fire({
                                         imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
                                         imageWidth: 100,
                                         imageHeight: 100,
                                         imageAlt: 'Custom image',
                                         title: 'Mensaje de Nataleglock',
-                                        html: responseAsistencia.message,
+                                        text: 'Has cancelado tu ingreso a nuestra escuela',
                                         showConfirmButton:true,
                                         confirmButtonText:'Oss!',
-                                        onOpen: function () {
-                                            if(responseAsistencia.alerta){
-                                                var audplay = new Audio(soundfile)
-                                                audplay.play();
-                                            }
-                                        },
                                     });
                                 }
                             })
@@ -126,27 +165,15 @@
                                 imageHeight: 100,
                                 imageAlt: 'Custom image',
                                 title: 'Mensaje de Nataleglock',
-                                text: 'Has cancelado tu ingreso a nuestra escuela',
+                                text: response.message,
                                 showConfirmButton:true,
-                                confirmButtonText:'Oss!',
-                            });
+                                confirmButtonText:'Oss!'
+                            })
                         }
-                    })
-                } else {
-                    swal.fire({
-                        imageUrl: '{{ secure_url('/') }}/vendor/adminlte/dist/img/leglockTransparente.png',
-                        imageWidth: 100,
-                        imageHeight: 100,
-                        imageAlt: 'Custom image',
-                        title: 'Mensaje de Nataleglock',
-                        text: response.message,
-                        showConfirmButton:true,
-                        confirmButtonText:'Oss!'
-                    })
-                }
 
-                $('#rut').val('')
-            })
-        })
+                        $('#rut').val('')
+                    })
+            }
+        }
     </script>
 @stop
