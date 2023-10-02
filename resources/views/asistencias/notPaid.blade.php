@@ -11,7 +11,10 @@
                             Listado de asistencias <strong>SIN PAGOS</strong>
                         </div>
                         <div class="col-md-6">
-                            <a href="{{ route('asistencias.index') }}" class="float-right btn btn-info">Registros de asistencias con Pagos</a>
+                            <div class="btn-group float-right">
+                                <a href="{{ route('asistencias.index') }}" class="btn btn-info">Registros de asistencias con Pagos</a>
+                                <a href="{{ route('asistencias.pendientes') }}" class="btn btn-success">Actualizar listado</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -35,9 +38,9 @@
                                     <select name="pagoAsociado" id="pagoAsociado" class="form-control porPagar">
                                         <option value="">Selecciona un pago de fecha</option>
                                         @foreach($pagos as $pago)
-                                            @if($pago->id_usuario === $asistencia->id_usuario)
+                                            @if($pago->id_usuario === $asistencia->idUsuario)
                                                 <option value="{{ $pago->id }}">
-                                                    Mensualidad del {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pago->fecha_inicio_mensualidad) }} al {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pago->fecha_termino_mensualidad) }}
+                                                    Mensualidad del {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pago->fecha_inicio_mensualidad)->format('d-m-Y') }} al {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pago->fecha_termino_mensualidad)->format('d-m-Y') }}
                                                 </option>
                                             @endif
                                         @endforeach
@@ -51,10 +54,30 @@
             </div>
         </div>
     </div>
-
 @stop
 
+@section('css')
+@section('css')
+    <style>
+        .select2-selection__rendered {
+            line-height: 35px !important;
+        }
+        .select2-container .select2-selection--single {
+            height: 39px !important;
+        }
+        .select2-selection__arrow {
+            height: 38px !important;
+        }
+    </style>
+@endsection
+
+@endsection
 @section('js')
     @include('js.datatable')
     @include('js.toastr')
+    <script>
+        $('.porPagar').select2({
+            width: '100%',
+        });
+    </script>
 @endsection

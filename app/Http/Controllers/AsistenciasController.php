@@ -40,7 +40,6 @@ class AsistenciasController extends Controller
     public function indexPendientes()
     {
         $pagos = Pagos::all();
-        ddd($pagos);
         $asistencias = \DB::table('asistencias')
             ->join('users', 'asistencias.id_usuario','=','users.id')
             ->select(
