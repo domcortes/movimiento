@@ -17,8 +17,43 @@ class AsistenciasController extends Controller
      */
     public function index()
     {
-        $asistencias = Asistencias::all();
+        $asistencias = \DB::table('asistencias')
+            ->join('users', 'asistencias.id_usuario','=','users.id')
+            ->select(
+                'users.id as idUsuario',
+                'users.name as nombreUsuario',
+                'asistencias.fecha_asistencia as fechaAsistencia',
+                'asistencias.clase_prueba as clasePrueba',
+                'asistencias.id_pago as idPago',
+            )
+            ->where('asistencias.id_pago','!=','null')
+            ->get();
+
         return view('asistencias.index', compact('asistencias'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexPendientes()
+    {
+        $pagos = Pagos::all();
+        ddd($pagos);
+        $asistencias = \DB::table('asistencias')
+            ->join('users', 'asistencias.id_usuario','=','users.id')
+            ->select(
+                'users.id as idUsuario',
+                'users.name as nombreUsuario',
+                'asistencias.fecha_asistencia as fechaAsistencia',
+                'asistencias.clase_prueba as clasePrueba',
+                'asistencias.id_pago as idPago',
+            )
+            ->whereNull('asistencias.id_pago')
+            ->get();
+
+        return view('asistencias.notPaid', compact('asistencias','pagos'));
     }
 
     /**

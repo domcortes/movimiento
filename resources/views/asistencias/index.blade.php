@@ -8,7 +8,10 @@
                 <div class="card-header bg-dark">
                     <div class="row">
                         <div class="col-md-6">
-                            Listado de asistencias
+                            Listado de asistencias pagadas
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ route('asistencias.pendientes') }}" class="float-right btn btn-info">Registros de asistencias sin Pagos</a>
                         </div>
                     </div>
                 </div>
@@ -24,8 +27,8 @@
                         <tbody>
                         @foreach($asistencias as $asistencia)
                             <tr>
-                                <td>{{ $asistencia->usuario->name }}</td>
-                                <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($asistencia->fecha_asistencia) }}</td>
+                                <td>{{ $asistencia->nombreUsuario }}</td>
+                                <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($asistencia->fechaAsistencia) }}</td>
                                 <td>{!! \App\Http\Controllers\SystemController::botonVerdaderoFalso($asistencia->clasePrueba) !!}</td>
                             </tr>
                         @endforeach

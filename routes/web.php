@@ -25,6 +25,8 @@ Route::resource('usuarios', \App\Http\Controllers\UsuariosController::class);
 Route::resource('pagos', \App\Http\Controllers\PagosController::class);
 Route::resource('asistencias', \App\Http\Controllers\AsistenciasController::class);
 
+Route::get('asistencias-sin-pago', [\App\Http\Controllers\AsistenciasController::class, 'indexPendientes'])->name('asistencias.pendientes');
+
 Route::group(['prefix' => 'usuario'], function(){
     Route::post('crear', [\App\Http\Controllers\UsuariosController::class,'createUser'])->name('usuario.crearUsuario');
    Route::post('revisar', [\App\Http\Controllers\UsuariosController::class, 'checkRut'])->name('usuario.checkRut');
