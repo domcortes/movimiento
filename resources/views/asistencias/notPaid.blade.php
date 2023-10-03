@@ -92,8 +92,11 @@
 
             $.post(url, data)
             .done(function (response) {
-                console.log(response)
-                response.result ? toastr.success(response.message) : toastr.error(response.message)
+                if(response.result){
+                    toastr.success(response.message)
+                } else {
+                    toastr.error(response.message)
+                }
             })
         })
     </script>
