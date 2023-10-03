@@ -23,8 +23,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::resource('usuarios', \App\Http\Controllers\UsuariosController::class);
 Route::resource('pagos', \App\Http\Controllers\PagosController::class);
-Route::resource('asistencias', \App\Http\Controllers\AsistenciasController::class);
+Route::post('actualizar-pago', [\App\Http\Controllers\PagosController::class, 'updatePayment'])->name('pago.actualizarPago');
 
+Route::resource('asistencias', \App\Http\Controllers\AsistenciasController::class);
 Route::get('asistencias-sin-pago', [\App\Http\Controllers\AsistenciasController::class, 'indexPendientes'])->name('asistencias.pendientes');
 
 Route::group(['prefix' => 'usuario'], function(){

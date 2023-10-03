@@ -45,6 +45,7 @@ class AsistenciasController extends Controller
             ->select(
                 'users.id as idUsuario',
                 'users.name as nombreUsuario',
+                'asistencias.id as idAsistencia',
                 'asistencias.fecha_asistencia as fechaAsistencia',
                 'asistencias.clase_prueba as clasePrueba',
                 'asistencias.id_pago as idPago',

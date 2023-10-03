@@ -35,7 +35,7 @@
                                 <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($asistencia->fechaAsistencia) }}</td>
                                 <td>{!! \App\Http\Controllers\SystemController::botonVerdaderoFalso($asistencia->clasePrueba) !!}</td>
                                 <td>
-                                    <select name="pagoAsociado" id="pagoAsociado" class="form-control porPagar">
+                                    <select markup="{{ $asistencia->idAsistencia }}" user="{{ $asistencia->idUsuario }}" name="pagoAsociado" id="pagoAsociado" class="form-control porPagar">
                                         <option value="">Selecciona un pago de fecha</option>
                                         @foreach($pagos as $pago)
                                             @if($pago->id_usuario === $asistencia->idUsuario)
@@ -79,5 +79,21 @@
         $('.porPagar').select2({
             width: '100%',
         });
+
+        $('.porPagar').on('change', function () {
+            let data = {
+                _token: '{{ csrf_token() }}',
+                usuario: $(this).attr('user'),
+                pago: $(this).val(),
+                asistencia: $(this).attr('markup')
+            }
+
+            let url = '{{ route('pago.actualizarPago') }}'
+
+            $.post(url, data)
+            .done(function (response) {
+                response.result ? toastr.success(response.message) : toastr.error(response.message)
+            })
+        })
     </script>
 @endsection

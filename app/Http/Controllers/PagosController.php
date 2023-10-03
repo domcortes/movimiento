@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asistencias;
 use App\Models\Pagos;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -12,7 +13,7 @@ class PagosController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
@@ -35,7 +36,7 @@ class PagosController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -92,12 +93,39 @@ class PagosController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function updatePayment(Request $request)
     {
-        //
+        try {
+            $usuario = $request->usuario;
+            $pago = $request->pago;
+            $asistencia = $request->asistencia;
+
+            $checkAsistencia = Asistencias::where('id_usuario', $usuario)
+                ->where('id', $asistencia)
+                ->first();
+
+            $checkAsistencia->id_pago = $pago;
+            $checkAsistencia->save();
+
+            $response = [
+                'result' => true,
+                'message' => 'Mensualidad actualizada correctamente',
+            ];
+        } catch (\ErrorException $errorException){
+            $response = [
+                'response' => false,
+                'message' => 'Error general: '.$errorException->getMessage(),
+            ];
+        } catch (QueryException $errorException){
+            $response = [
+                'response' => false,
+                'message' => 'Error de DB: '.$errorException->getMessage(),
+            ];
+        }
+
+        return response()->json($response);
     }
 
     /**
