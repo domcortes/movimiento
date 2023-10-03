@@ -25,7 +25,7 @@ class SystemController extends Controller
     static public function messagesResponse($tipo, $message = null){
         switch ($tipo){
             case 'no existe alumno':
-                return 'Alumno no se encuentra registrado en Nataleglock, por favor contacta con el profesor';
+                return 'Alumno no se encuentra registrado en Nataleglock o se encuentra desactivado, por favor contacta con el profesor';
 
             case 'asistenciaOk':
                 return 'Registro de asistencia creado correctamente. Recuerda nuestras normas y disfruta tu entrenamiento';

@@ -75,7 +75,9 @@ class AsistenciasController extends Controller
     public function store(Request $request)
     {
         try {
-            $usuario = User::where('rut', $request->rut)->first();
+            $usuario = User::where('rut', $request->rut)
+                ->first();
+
 
             if($usuario !== null){
                 $asistencia = new Asistencias();

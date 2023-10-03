@@ -91,7 +91,9 @@ class UsuariosController extends Controller
 
     public function checkRut(Request $request){
         try {
-            $usuario = User::where('rut', $request->rut)->first();
+            $usuario = User::where('rut', $request->rut)
+                ->where('status', true)
+                ->first();
 
             if($usuario === null){
                 $response = [
