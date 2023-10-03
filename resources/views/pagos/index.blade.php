@@ -3,7 +3,7 @@
 @section('content')
     <br>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-dark">
                     <div class="row">
@@ -44,16 +44,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-danger">
-                    Mensualidades pendientes
-                </div>
-                <div class="card-body">
-                    aqui iran las mensualidades pendientes
                 </div>
             </div>
         </div>
