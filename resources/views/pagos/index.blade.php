@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="display" id="tablaPagos">
+                    <table class="display" id="tablaPagos" >
                         <thead>
                             <tr>
                                 <th>Alumno</th>
