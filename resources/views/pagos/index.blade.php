@@ -68,7 +68,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('pagos.store') }}" method="post">
+                <form action="{{ route('pagos.store') }}" method="post" onsubmit="showLoader()">
                     @csrf
                     <div class="modal-body">
                         <div class="form-row">
@@ -167,5 +167,10 @@
                 $('#cantidadClases').val(response.clases)
             })
         })
+
+        function showLoader(){
+            swal.fire('Agregando pago')
+            swal.showLoading()
+        }
     </script>
 @endsection
