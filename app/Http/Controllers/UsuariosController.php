@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asistencias;
 use App\Models\Pagos;
 use App\Models\User;
+use Carbon\Carbon;
 use http\Env\Response;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -156,7 +157,7 @@ class UsuariosController extends Controller
 
             $asistencia = new Asistencias();
             $asistencia->id_usuario = $usuario->id;
-            $asistencia->fecha_asistencia = $request->date;
+            $asistencia->fecha_asistencia = Carbon::now()->setTimezone('America/Santiago')->format('Y-m-d');
             $asistencia->clase_prueba = false;
             $asistencia->created_at = $request->dateTime;
             $asistencia->updated_at = $request->dateTime;
