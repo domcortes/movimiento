@@ -49,6 +49,10 @@ class SystemController extends Controller
         return view('informaciones.privacidad');
     }
 
+    public function reglamento(){
+        return view('informaciones.reglamento');
+    }
+
     static public function whatsappNotification($tipo, $telefonos = []){
         try {
             $url = 'https://graph.facebook.com/v17.0/112648021891240/messages';

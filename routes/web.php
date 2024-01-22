@@ -37,4 +37,5 @@ Route::group(['prefix' => 'usuario'], function(){
 
 Route::group(['prefix' => 'informaciones'], function(){
     Route::get('privacidad',[\App\Http\Controllers\SystemController::class, 'privacidad'])->name('informaciones.privacidad');
+    Route::get('reglamento',[\App\Http\Controllers\SystemController::class, 'reglamento'])->name('informaciones.reglamento');
 });
