@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use http\Message;
 use Illuminate\Http\Request;
 
 class SystemController extends Controller
 {
-    static public function fechaFormateada($fecha){
+    static public function fechaFormateada($fecha)
+    {
         return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
     }
 
     static public function botonVerdaderoFalso($parametro)
     {
-        switch ($parametro){
+        switch ($parametro) {
             case true:
                 return '<button class="btn btn-success">Prueba</button>';
             case false:
@@ -22,8 +25,9 @@ class SystemController extends Controller
         }
     }
 
-    static public function messagesResponse($tipo, $message = null){
-        switch ($tipo){
+    static public function messagesResponse($tipo, $message = null)
+    {
+        switch ($tipo) {
             case 'no existe alumno':
                 return 'Alumno no se encuentra registrado en Nataleglock o se encuentra desactivado, por favor contacta con el profesor';
 
@@ -31,70 +35,78 @@ class SystemController extends Controller
                 return 'Registro de asistencia creado correctamente. Recuerda nuestras normas y disfruta tu entrenamiento';
 
             case 'queryException':
-                return 'Error al registrar: '.$message;
+                return 'Error al registrar: ' . $message;
 
             case 'errorException':
-                return 'Error general: '.$message;
+                return 'Error general: ' . $message;
 
             case 'limiteAsistencia':
                 return 'Usted ya registro una asistencia para el dia de hoy, contacte con el profesor';
 
             case 'pendientePago':
                 return '<strong class="text-danger">Usted se encuentra con una mensualidad pendiente</strong><br><br>Tiene un periodo maximo de 2 clases para regularizar su mensualidad con un recargo de $5.000 por clase';
-
         }
     }
 
-    public function privacidad(){
+    public function privacidad()
+    {
         return view('informaciones.privacidad');
     }
 
-    public function reglamento(){
+    public function reglamento()
+    {
         return view('informaciones.reglamento');
     }
 
-    static public function whatsappNotification($tipo, $telefonos = []){
+    static public function whatsappNotification($rut, $nombreUsuario)
+    {
         try {
-            $url = 'https://graph.facebook.com/v17.0/112648021891240/messages';
-            $token = 'EAAN7B2UHoJwBAMtOmn8TuREfRB97OlZCy2qgM2BmgrWLs0BZBa5ZCfGc7xKZC5lQe5GXHi3WOAA20keGDZBs2SXmPFLf09FqMhhGfESBDhKOvrgW4pitex9wJQoAXUU8c98ZC1LCtdLsCurRwTAfIXi336kAMTkZCCreRWrbWJtfUJlgwUZAj7ge7ZBpIlQZCQ0bfY9AlEi2dYqgx13SvDBedS';
+            $url = 'https://graph.facebook.com/v18.0/112648021891240/messages';
+            $accessToken = 'EAAN7B2UHoJwBOZCeNmLTu0UTihQplu5XaAYdmPzC2jFng23ZBQi7NDzX5ETAkDeN76ZAsWINc0IOrEE04jclZC4CFWpkKHLq1lwxZCVNCdFUJrtP8JtPVi2ZAAxyoLYdpyYVd2W73lncIGqv8lSxV74hKlNZAInIXrcE0amKD0wWLxZBYvUWs0nkXhNeYwA9FXhUUQXpeCujOo8KZBAZDZD';
 
-            foreach ($telefonos as $telefono){
-                switch ($tipo){
-                    case 'bienvenida':
-                        $mensaje =''
-                            .'{'
-                            .'"messaging_product": "whatsapp", '
-                            .'"to": "'.$telefono.'", '
-                            .'"type": "template",'
-                            .'"template": '
-                            .'{'
-                            .'  "name": "bienvenida",'
-                            .'  "language":{ "code": "en_US" },'
-                            .'} '
-                            .'}';
-                        break;
-                }
+            $client = new Client();
 
-                $header = [
-                    'Authorization: Bearer '.$token,
-                    "Content-Type: application/json",
-                ];
+            $response = $client->request('POST', $url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => [
+                    'messaging_product' => 'whatsapp',
+                    'to' => 'whatsapp:56989004946',
+                    'type' => 'template',
+                    'template' => [
+                        'name' => 'bienvenida',
+                        'language' => [
+                            'code' => 'en_US',
+                        ],
+                        'components' => [
+                            [
+                                'type' => 'body',
+                                'parameters' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => $rut,
+                                    ],
+                                    [
+                                        'type' => 'text',
+                                        'text' => $nombreUsuario,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
 
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $mensaje);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+            // Manejar la respuesta aquí según tus necesidades
+            $statusCode = $response->getStatusCode();
+            $body = $response->getBody()->getContents();
 
-                $response = json_decode(curl_exec($curl), true);
-                print_r($response);
-
-                $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-                curl_close($curl);
-            }
-
-
-        } catch (\ErrorException $error){
+            return response()->json(['statusCode' => $statusCode, 'body' => $body]);
+        } catch (\ErrorException $error) {
+            echo $error->getMessage();
+        } catch (ClientException $error) {
             echo $error->getMessage();
         }
     }

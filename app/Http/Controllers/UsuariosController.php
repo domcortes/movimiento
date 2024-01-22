@@ -167,6 +167,9 @@ class UsuariosController extends Controller
             if($pagos === null){
                 $asistencia->id_pago = null;
                 $asistencia->save();
+
+                SystemController::whatsappNotification($usuario->rut, $usuario->name);
+                
                 $response = [
                     'result' => true,
                     'pagos' => $pagos,

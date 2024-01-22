@@ -392,8 +392,6 @@
 
             let url = '{{ route('usuario.checkRut') }}';
 
-            console.log(dataCheck)
-
             if (sport !== '' && rut !== '') {
                 $.post(url, dataCheck)
                     .done(function(response) {
@@ -412,10 +410,17 @@
                                 cancelButtonText: 'Cancelar'
                             }).then((result) => {
                                 if (result.value) {
+                                    swal.fire({
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    })
                                     let urlAsistencia = '{{ route('usuario.marcarAsistencia') }}'
 
                                     $.post(urlAsistencia, dataCheck)
                                         .done(function(responseAsistencia) {
+                                            swal.close();
+
                                             if (responseAsistencia.result) {
                                                 let soundfile =
                                                     "{{ secure_url('/') }}/vendor/adminlte/dist/sound/redalert.mp3";
@@ -479,7 +484,6 @@
                 confirmButtonText: 'Privacidad',
                 denyButtonText: 'Reglamento interno',
                 cancelButtonText: '',
-
             }).then((result) => {
                 if (result.isConfirmed) {
                     let url = "{{ route('informaciones.privacidad') }}";

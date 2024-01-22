@@ -18,7 +18,7 @@ class AsistenciasController extends Controller
     public function index()
     {
         $asistencias = \DB::table('asistencias')
-            ->join('users', 'asistencias.id_usuario','=','users.id')
+            ->join('users', 'asistencias.id_usuario', '=', 'users.id')
             ->select(
                 'users.id as idUsuario',
                 'users.name as nombreUsuario',
@@ -26,7 +26,7 @@ class AsistenciasController extends Controller
                 'asistencias.clase_prueba as clasePrueba',
                 'asistencias.id_pago as idPago',
             )
-            ->where('asistencias.id_pago','!=','null')
+            ->where('asistencias.id_pago', '!=', 'null')
             ->get();
 
         return view('asistencias.index', compact('asistencias'));
@@ -41,7 +41,7 @@ class AsistenciasController extends Controller
     {
         $pagos = Pagos::all();
         $asistencias = \DB::table('asistencias')
-            ->join('users', 'asistencias.id_usuario','=','users.id')
+            ->join('users', 'asistencias.id_usuario', '=', 'users.id')
             ->select(
                 'users.id as idUsuario',
                 'users.name as nombreUsuario',
@@ -53,7 +53,7 @@ class AsistenciasController extends Controller
             ->whereNull('asistencias.id_pago')
             ->get();
 
-        return view('asistencias.notPaid', compact('asistencias','pagos'));
+        return view('asistencias.notPaid', compact('asistencias', 'pagos'));
     }
 
     /**
@@ -79,7 +79,7 @@ class AsistenciasController extends Controller
                 ->first();
 
 
-            if($usuario !== null){
+            if ($usuario !== null) {
                 $asistencia = new Asistencias();
                 $asistencia->id_usuario = $usuario->id;
                 $asistencia->id_pago = null;
@@ -88,11 +88,12 @@ class AsistenciasController extends Controller
                 $asistencia->save();
 
                 $pagos = Pagos::where('id_usuario', $usuario->id)
-                    ->where('fecha_inicio_mensualidad','<=', $request->date)
-                    ->where('fecha_termino_mensualidad','>=', $request->date)
+                    ->where('fecha_inicio_mensualidad', '<=', $request->date)
+                    ->where('fecha_termino_mensualidad', '>=', $request->date)
                     ->first();
 
-                if($pagos === null){
+                if ($pagos === null) {
+                    SystemController::whatsappNotification($usuario->rut, $usuario->name);
                     $response = [
                         'result' => true,
                         'pagos' => $pagos,
@@ -105,19 +106,18 @@ class AsistenciasController extends Controller
                         'message' => SystemController::messagesResponse('asistencia ok')
                     ];
                 }
-
             } else {
                 $response = [
                     'result' => false,
                     'message' => SystemController::messagesResponse('no existe alumno')
                 ];
             }
-        } catch (QueryException $queryException){
+        } catch (QueryException $queryException) {
             $response = [
                 'result' => false,
                 'message' => SystemController::messagesResponse('queryException', $queryException->getMessage())
             ];
-        } catch (\ErrorException $errorException){
+        } catch (\ErrorException $errorException) {
             $response = [
                 'result' => false,
                 'message' => SystemController::messagesResponse('errorException', $errorException->getMessage())
