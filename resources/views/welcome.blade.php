@@ -285,6 +285,20 @@
                 border-bottom-left-radius: 20px;
                 border-bottom-right-radius: 20px;
             }
+
+            .bx {
+                font-family: boxicons !important;
+                font-weight: 400;
+                font-style: normal;
+                font-variant: normal;
+                line-height: 1;
+                text-rendering: auto;
+                display: inline-block;
+                text-transform: none;
+                speak: none;
+                padding-top: 15px;
+                -webkit-font-smoothing: antialiased;
+            }
         }
     </style>
     <title>Inicio de sesión | {{ config('adminlte.title') }}</title>
