@@ -26,7 +26,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-image: url("https://renzogracieacademy.com/wp-content/uploads/2019/09/Carlos-and-Helio-Gracie-Brazilian-Jiu-Jitsu-Grandmasters.jpg.webp");
+            background-image: url("https://z-p3-scontent.fpuq3-1.fna.fbcdn.net/v/t39.30808-6/317693314_667099621418860_5229976934178739457_n.png?_nc_cat=105&ccb=1-7&_nc_sid=783fdb&_nc_eui2=AeF-gjn1-GjfHrNqdlKZxUg5SwlFN3ErnFFLCUU3cSucUbY_WTyJT4pg0k8dt_U9v9Ta2y7mnC3IVUue15rOr0Ih&_nc_ohc=ot11JbKn3H0AX_vyWPY&_nc_zt=23&_nc_ht=z-p3-scontent.fpuq3-1.fna&oh=00_AfC8TRWqohDcU-EZ3kflGuLK6-SRsJkAoF2DQWwjsaKweQ&oe=65C5D9FF");
             background-size: cover;
         }
 
