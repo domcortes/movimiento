@@ -18,8 +18,9 @@ class PagosController extends Controller
     public function index()
     {
         $pagos = Pagos::all();
-        $alumnos = User::all();
-        return view('pagos.index', compact('pagos', 'alumnos'));
+        $alumnos = User::where('role', '!=', 'profesor')->get();
+        $profesores = User::where('role', 'profesor')->get();
+        return view('pagos.index', compact('pagos', 'alumnos', 'profesores'));
     }
 
     /**
@@ -55,14 +56,15 @@ class PagosController extends Controller
             $pago->cantidad_clases = $request->cantidadClases;
             $pago->medio_pago = $request->medioPago;
             $pago->primera_mensualidad = $primeraMensualidad;
+            $pago->id_profesor = $request->profesor;
             $pago->save();
 
             return redirect()->back()->with('success', 'Mensualidad creada correctamente');
-        } catch (QueryException $queryException){
-            $error = 'Error: '.$queryException->getMessage();
+        } catch (QueryException $queryException) {
+            $error = 'Error: ' . $queryException->getMessage();
             return redirect()->back()->with('warning', $error);
-        } catch (\ErrorException $errorException){
-            $error = 'Error: '.$errorException->getMessage();
+        } catch (\ErrorException $errorException) {
+            $error = 'Error: ' . $errorException->getMessage();
             return redirect()->back()->with('warning', $error);
         }
     }
@@ -113,15 +115,15 @@ class PagosController extends Controller
                 'result' => true,
                 'message' => 'Mensualidad actualizada correctamente',
             ];
-        } catch (\ErrorException $errorException){
+        } catch (\ErrorException $errorException) {
             $response = [
                 'response' => false,
-                'message' => 'Error general: '.$errorException->getMessage(),
+                'message' => 'Error general: ' . $errorException->getMessage(),
             ];
-        } catch (QueryException $errorException){
+        } catch (QueryException $errorException) {
             $response = [
                 'response' => false,
-                'message' => 'Error de DB: '.$errorException->getMessage(),
+                'message' => 'Error de DB: ' . $errorException->getMessage(),
             ];
         }
 

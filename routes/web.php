@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfesoresController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,3 +41,5 @@ Route::group(['prefix' => 'informaciones'], function(){
     Route::get('reglamento',[\App\Http\Controllers\SystemController::class, 'reglamento'])->name('informaciones.reglamento');
     Route::get('whatsapp',[\App\Http\Controllers\SystemController::class, 'whatsappNotification'])->name('informaciones.whatsapp');
 });
+
+Route::resource('profesores', ProfesoresController::class);

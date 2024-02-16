@@ -11,12 +11,13 @@
                             Listado de pagos
                         </div>
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalCrearPago">Agregar pago</button>
+                            <button type="button" class="btn btn-primary float-right" data-toggle="modal"
+                                data-target="#modalCrearPago">Agregar pago</button>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="display" id="tablaPagos" >
+                    <table class="display" id="tablaPagos">
                         <thead>
                             <tr>
                                 <th>Alumno</th>
@@ -28,11 +29,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($pagos as $pago)
+                            @foreach ($pagos as $pago)
                                 <tr>
                                     <td>{{ $pago->usuario->name }}</td>
-                                    <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($pago->fecha_pago) }}</td>
-                                    <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($pago->fecha_vencimiento) }}</td>
+                                    <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($pago->fecha_pago) }}
+                                    </td>
+                                    <td>{{ \App\Http\Controllers\SystemController::fechaFormateada($pago->fecha_vencimiento) }}
+                                    </td>
                                     <td>{{ $pago->cantidad_clases }}</td>
                                     <td>{{ $pago->medio_pago }}</td>
                                     <td>
@@ -49,8 +52,9 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCrearPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+    <div class="modal fade" id="modalCrearPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-dark">
                     <h5 class="modal-title" id="exampleModalLabel">Crear mensualidad</h5>
@@ -62,27 +66,39 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Alumno</label>
                                     <select name="alumno" id="alumno" class="form-control" required>
                                         <option value="">Selecciona un alumno</option>
-                                        @foreach($alumnos as $alumno)
+                                        @foreach ($alumnos as $alumno)
                                             <option value="{{ $alumno->id }}">{{ $alumno->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Profesor</label>
+                                    <select name="profesor" id="profesor" class="form-control" required>
+                                        <option value="">Selecciona un profesor</option>
+                                        @foreach ($profesores as $profesor)
+                                            <option value="{{ $profesor->id }}">{{ $profesor->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Fecha de Pago</label>
                                     <input type="date" name="fechaPago" id="fechaPago" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Fecha de vencimiento</label>
-                                    <input type="date" name="fechaVencimiento" id="fechaVencimiento" class="form-control" required>
+                                    <input type="date" name="fechaVencimiento" id="fechaVencimiento" class="form-control"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -90,19 +106,22 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Inicio mensualidad</label>
-                                    <input type="date" name="inicioMensualidad" id="inicioMensualidad" class="form-control" required>
+                                    <input type="date" name="inicioMensualidad" id="inicioMensualidad"
+                                        class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Término mensualidad</label>
-                                    <input type="date" name="terminoMensualidad" id="terminoMensualidad" class="form-control" required>
+                                    <input type="date" name="terminoMensualidad" id="terminoMensualidad"
+                                        class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="">Cantidad de clases</label>
-                                    <input type="number" name="cantidadClases" id="cantidadClases" class="form-control" required step="1" value="12">
+                                    <input type="number" name="cantidadClases" id="cantidadClases" class="form-control"
+                                        required step="1" value="12">
                                 </div>
                             </div>
                         </div>
@@ -134,17 +153,22 @@
     @include('js.datatable')
     @include('js.toastr')
     <script>
-        $('#fechaPago').on('change', function(){
+        $('#alumno, #profesor').select2({
+            width: '100%',
+            height: 'resolve'
+        });
+
+        $('#fechaPago').on('change', function() {
             let fechaPago = new Date($(this).val());
-            let inicioMensualidad = moment(new Date(fechaPago)).add(1,'days')
-            let fechaCalculada = moment(new Date(fechaPago)).add(31,'days')
+            let inicioMensualidad = moment(new Date(fechaPago)).add(1, 'days')
+            let fechaCalculada = moment(new Date(fechaPago)).add(31, 'days')
 
             $('#fechaVencimiento').val(fechaCalculada.format('YYYY-MM-DD'));
             $('#inicioMensualidad').val(inicioMensualidad.format('YYYY-MM-DD'));
             $('#terminoMensualidad').val(fechaCalculada.format('YYYY-MM-DD'));
         })
 
-        $('#alumno').on('change', function(){
+        $('#alumno').on('change', function() {
             let data = {
                 _token: '{{ csrf_token() }}',
                 alumno: $(this).val()
@@ -153,12 +177,12 @@
             let url = '{{ route('usuario.checkMensualidad') }}'
 
             $.post(url, data)
-            .done(function (response) {
-                $('#cantidadClases').val(response.clases)
-            })
+                .done(function(response) {
+                    $('#cantidadClases').val(response.clases)
+                })
         })
 
-        function showLoader(){
+        function showLoader() {
             swal.fire('Agregando pago')
             swal.showLoading()
         }

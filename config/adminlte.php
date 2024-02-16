@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Nataleglock Jiujitsu',
+    'title' => 'Movimiento NA',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Nataleglock</b> Jiujitsu',
+    'logo' => '<b>Movimiento</b>',
     'logo_img' => 'vendor/adminlte/dist/img/leglockTransparente.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -315,6 +315,11 @@ return [
         [
             'text' => 'Asistencias',
             'url' => 'asistencias',
+            'icon' => 'fa-solid fa-sheet-plastic'
+        ],
+        [
+            'text' => 'Profesores',
+            'url' => 'profesores',
             'icon' => 'fa-solid fa-sheet-plastic'
         ],
         ['header' => 'account_settings'],
@@ -569,6 +574,21 @@ return [
                 ],
             ],
         ],
+        'Summernote' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css'
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js'
+                ]
+            ]
+        ]
     ],
 
     /*
