@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PlanesController;
 use App\Http\Controllers\ProfesoresController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,3 +44,4 @@ Route::group(['prefix' => 'informaciones'], function(){
 });
 
 Route::resource('profesores', ProfesoresController::class);
+Route::resource('planes', PlanesController::class);

@@ -12,7 +12,7 @@
                         </div>
                         <div class="col-md-6">
                             <button type="button" class="btn btn-primary float-right" data-toggle="modal"
-                                data-target="#modalCrearUsuario">Agregar usuario</button>
+                                data-target="#modalCrearUsuario">Agregar profesor</button>
                         </div>
                     </div>
                 </div>
@@ -36,9 +36,15 @@
                                     <td><a href="tel:+{{ $profesor->telefono }}">+{{ $profesor->telefono }}</a></td>
                                     <td>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            <button type="button" class="btn btn-primary contenido"
+                                                teacher='{{ $profesor->id }}' data-toggle="modal"
                                                 data-target="#exampleModalLong">
                                                 <i class="fa-solid fa-arrows-to-circle"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-secondary planes"
+                                                teacher='{{ $profesor->id }}' data-toggle="modal"
+                                                data-target="#modalPlanes">
+                                                <i class="fa-solid fa-ruler-combined"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -144,7 +150,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Seleccion de alumnos <small>(solo usuarios con mensualidades al diasource)</small></label>
+                                    <label for="">Seleccion de alumnos <small>(solo usuarios con mensualidades al
+                                            diasource)</small></label>
                                     <select name="alumnos[]" multiple="multiple" id="alumnos" class="form-control">
                                         @foreach ($alumnos as $alumno)
                                             <option value="{{ $alumno->id }}">{{ $alumno->name }}</option>
@@ -168,6 +175,81 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalPlanes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Crear contenido</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <form action="{{ route('planes.store') }}" method="POST">
+                                        @csrf
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="">Selecciona un profesor</label>
+                                                    <select name="teacher" id="teacher" class="form-control" required>
+                                                        <option value="">Selecciona un proveedor</option>
+                                                        @foreach ($profesores as $item)
+                                                            <option value="{{ $item->id }}">{{ $item->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="">Cantidad de clases incluidas</label>
+                                                    <input type="number" name="clases" id="clases"
+                                                        class="form-control" placeholder="numero entero" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="">Monto del plan</label>
+                                                    <input type="number" name="monto" id="monto"
+                                                        class="form-control" placeholder="ej. : 40000" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-primary">Crear plan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-4">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Cant</th>
+                                                <th>Monto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="planTable">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('js')
@@ -179,8 +261,25 @@
             height: 'resolve',
         })
 
-
         $('#contenido').summernote();
+
+        $('.planes').on('click', function(){
+            $('#planTable').empty();
+        })
+
+        $('#teacher').on('change', function() {
+            let teacher = $(this).val();
+            let url = '{{ secure_url('/') }}/planes/' + teacher
+
+            $.get(url).done(function(response) {
+                $('#planTable').empty();
+
+                response.data.forEach(function(item) {
+                    let newRow = '<tr><td>' + item.numero_clases + '</td><td>' + item.monto + '</td></tr>';
+                    $('#planTable').append(newRow);
+                });
+            })
+        })
 
         function limpiezaRut(event) {
             let rut = $('#rut').val();
