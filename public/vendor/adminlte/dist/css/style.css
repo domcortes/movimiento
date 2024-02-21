@@ -13,7 +13,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('https://torresdelpaine.com/wp-content/uploads/sites/6/2023/09/atractivo-cuernos-01-01-600x338.jpg');
+    background: url('/vendor/adminlte/dist/img/portada.jpeg');
     background-size: cover;
     background-position: center;
 }
@@ -28,14 +28,6 @@ header {
     align-items: center;
     justify-content: space-between;
     z-index: 99;
-}
-
-.logo {
-    font-size: 2.3rem;
-    color: #fff;
-    user-select: none;
-    cursor: pointer;
-
 }
 
 .navegacion a {
@@ -251,4 +243,14 @@ header {
 
 .registar p a:hover {
     text-decoration: underline;
+}
+
+.responsive-image {
+    display: block;
+}
+
+@media (max-width: 767px) {
+    .responsive-image {
+        display: none;
+    }
 }

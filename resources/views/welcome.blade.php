@@ -6,20 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://kit.fontawesome.com/a2dd6045c4.js" crossorigin="anonymous"></script>
-    <title>Document</title>
+    <title>{{ config('adminlte.title') }}</title>
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/style.css') }}">
 </head>
 
 <body>
     <header>
-        <h2 class="logo">Movimiento</h2>
         <nav class="navegacion">
-            {{-- <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
-            <a href="#">Link 4</a>
-            <a href="#">Link 5</a>
-            <button class="btn">Iniciar sesion</button>--}}
+            <img class="responsive-logo" src="{{ asset($logoSeleccionado) }}" alt="" width="200px">
         </nav>
     </header>
 

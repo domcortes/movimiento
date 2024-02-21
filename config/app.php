@@ -14,7 +14,9 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    'khipu_api' => env('KHIPU_API_KEY', ''),
+    'khipu_key' => env('KHIPU_KEY', ''),
+    'khipu_id' => env('KHIPU_ID_COBRADOR', ''),
     /*
     |--------------------------------------------------------------------------
     | Application Environment
