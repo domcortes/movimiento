@@ -18,10 +18,6 @@
     </header>
 
     <div class="fondo active-btn">
-        <span class="icono-cerrar">
-            <i class="fa-solid fa-xmark"></i>
-        </span>
-
         <div class="contenedor-form login">
             <h2>Iniciar sesion</h2>
             <form action="{{ route('login') }}" method="post">
@@ -50,27 +46,43 @@
         </div>
 
         <div class="contenedor-form registrar">
-            <h2>Registrar</h2>
+            <h2>¡Registrate!</h2>
             <form action="" method="post">
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-user"></i></span>
-                    <input type="text" name="" id="">
-                    <label for="#">Nombre usuario</label>
+                    <input type="text" name="" id="" required>
+                    <label for="#">Ingresa tu nombre</label>
                 </div>
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-envelope"></i></span>
-                    <input type="email" name="" id="">
+                    <input type="email" name="" id="" required>
                     <label for="#">Email</label>
                 </div>
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-lock"></i></span>
-                    <select name="" id="">
-                        <option value="">Hola</option>
+                    <input type="password" name="password" id="password">
+                    <label for="#">Contraseña</label>
+                </div>
+                <div class="contenedor-input">
+                    <select name="plan" id="plan" required>
+                        <option value="">Selecciona un plan</option>
+                        @foreach ($planes as $plan)
+                            <option value="{{ $plan->id }}">{{ Str::ucfirst($plan->nombre_plan) }}
+                                {{ number_format($plan->monto, 0, ',', '.') }} + IVA ({{ $plan->numero_clases }} clases)
+                            </option>
+                        @endforeach
                     </select>
                     <label for="#">Plan</label>
                 </div>
+                <div class="contenedor-input">
+                    <select name="payment" id="payment" required>
+                        <option value="">Selecciona un medio de pago</option>
+                        <option value="khipu">Khipu</option>
+                    </select>
+                    <label for="#">Metodo de pago</label>
+                </div>
 
-                <button type="submit" class="btn">Registrarse</button>
+                <button type="submit" class="btn">Pagar y registrarse</button>
 
                 <div class="registrar">
                     <p>¿Tienes cuenta? <a href="#" class="login-link">Inicia sesion</a></p>
@@ -83,15 +95,30 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="//storage.googleapis.com/installer/khipu-2.0.js"></script>
     <script>
-        let url = '{{ route('payments.crear-pago') }}';
-        let paymentObject = {
-            _token: '{{ csrf_token() }}',
-            mode: 'khipu',
-            amount: 200,
+        $('#payment, #plan').on('change', function() {
+            paymentBtn();
+        })
+
+        const paymentBtn = () => {
+            let getPlanUrl = "{{ secure_url('/') }}/planes/get-plan/" + $('#plan').val();
+
+            $.get(getPlanUrl).done(function(responsePlan) {
+                let paymentObject = {
+                    _token: '{{ csrf_token() }}',
+                    mode: $('#payment').val(),
+                    plan: $('#plan').val(),
+                    amount: responsePlan.data[0].monto,
+                }
+
+                let urlPayment = '{{ route('payments.crear-pago') }}';
+                $.post(urlPayment, paymentObject).done(function(responsePaymentCreation) {
+                    console.log(responsePaymentCreation);
+                })
+            })
+
+
+
         }
-        /* $.post(url, paymentObject).done(function(responsePaymentCreation) {
-            console.log(responsePaymentCreation);
-        }) */
     </script>
 
 </body>

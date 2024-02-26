@@ -64,6 +64,8 @@ Route::group(['prefix' => 'informaciones'], function () {
 Route::resource('profesores', ProfesoresController::class);
 Route::resource('planes', PlanesController::class);
 
+Route::get('planes/get-plan/{id}', [PlanesController::class, 'getPlanFromId']);
+
 Route::group(['prefix' => 'payments'], function () {
     Route::post('/create-payment', [\App\Http\Controllers\SystemController::class, 'crearPago'])->name('payments.crear-pago');
 });

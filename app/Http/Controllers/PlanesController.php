@@ -117,4 +117,24 @@ class PlanesController extends Controller
     {
         //
     }
+
+    public function getPlanFromId($id){
+        $result = false;
+        $data = [];
+        try {
+            $data = Planes::where('id', $id)->get();
+            $result = true;
+            $message = 'Data catch';
+        } catch (ErrorException $th) {
+            $message = 'Error (general)' . $th->getMessage();
+        } catch (QueryException $th) {
+            $message = 'Error (query)' . $th->getMessage();
+        }
+
+        return response()->json([
+            'result' => $result,
+            'message' => $message,
+            'data' => $data
+        ]);
+    }
 }
