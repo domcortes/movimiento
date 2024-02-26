@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PlanesController;
 use App\Http\Controllers\ProfesoresController;
+use App\Models\Planes;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +32,9 @@ Route::get('/', function () {
     $indiceAzar = array_rand($logos);
     $logoSeleccionado = $logos[$indiceAzar];
 
-    return view('welcome', compact('logoSeleccionado'));
+    $planes = Planes::all();
+
+    return view('welcome', compact('logoSeleccionado', 'planes'));
 });
 
 Auth::routes();
@@ -60,3 +63,7 @@ Route::group(['prefix' => 'informaciones'], function () {
 
 Route::resource('profesores', ProfesoresController::class);
 Route::resource('planes', PlanesController::class);
+
+Route::group(['prefix' => 'payments'], function () {
+    Route::post('/create-payment', [\App\Http\Controllers\SystemController::class, 'crearPago'])->name('payments.crear-pago');
+});

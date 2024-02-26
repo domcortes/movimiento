@@ -64,8 +64,10 @@
                 </div>
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-lock"></i></span>
-                    <input type="password" name="" id="">
-                    <label for="#">Contraseña</label>
+                    <select name="" id="">
+                        <option value="">Hola</option>
+                    </select>
+                    <label for="#">Plan</label>
                 </div>
 
                 <button type="submit" class="btn">Registrarse</button>
@@ -77,6 +79,21 @@
         </div>
     </div>
     <script src="{{ asset('vendor/adminlte/dist/js/app.js') }}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="//storage.googleapis.com/installer/khipu-2.0.js"></script>
+    <script>
+        let url = '{{ route('payments.crear-pago') }}';
+        let paymentObject = {
+            _token: '{{ csrf_token() }}',
+            mode: 'khipu',
+            amount: 200,
+        }
+        /* $.post(url, paymentObject).done(function(responsePaymentCreation) {
+            console.log(responsePaymentCreation);
+        }) */
+    </script>
+
 </body>
 
 </html>

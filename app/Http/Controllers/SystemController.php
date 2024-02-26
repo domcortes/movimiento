@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use http\Message;
+use Khipu\Configuration as KhipuConfiguration;
+use Khipu\ApiClient as KhipuApiClient;
+use Khipu\Client\PaymentsApi as KhipuClientPaymentsApi;
+use Khipu\ApiException as KhipuApiException;
 use Illuminate\Http\Request;
 
 class SystemController extends Controller
@@ -108,6 +111,46 @@ class SystemController extends Controller
             echo $error->getMessage();
         } catch (ClientException $error) {
             echo $error->getMessage();
+        }
+    }
+
+    public function crearPago(Request $request)
+    {
+        switch($request->mode){
+            default:
+            case 'khipu':
+                $receiverId = config('app.khipu_id');
+                $secretKey = config('app.khipu_key');
+
+                $configuration = new KhipuConfiguration();
+                $configuration->setReceiverId($receiverId);
+                $configuration->setSecret($secretKey);
+
+                $client = new KhipuApiClient($configuration);
+                $payments = new KhipuClientPaymentsApi($client);
+
+                try {
+                    $opts = [
+                        "transaction_id" => "MTI-100",
+                        "return_url" => "http://mi-ecomerce.com/backend/return",
+                        "cancel_url" => "http://mi-ecomerce.com/backend/cancel",
+                        "picture_url" => "http://mi-ecomerce.com/pictures/foto-producto.jpg",
+                        "notify_url" => "http://mi-ecomerce.com/backend/notify",
+                        "notify_api_version" => "1.3"
+                    ];
+
+                    $response = $payments->paymentsPost(
+                        'Compra de prueba de api',
+                        "clp",
+                        100.0,
+                        $opts
+                    );
+
+                    return $response['simplified_transfer_url'];
+                } catch (KhipuApiException $th) {
+                    echo print_r($th->getResponseBody(), true);
+                }
+                break;
         }
     }
 }
