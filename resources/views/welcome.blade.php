@@ -50,22 +50,22 @@
             <form action="" method="post">
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-user"></i></span>
-                    <input type="text" name="" id="" required>
+                    <input type="text" name="nameNewUser" id="nameNewUser" required>
                     <label for="#">Ingresa tu nombre</label>
                 </div>
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-envelope"></i></span>
-                    <input type="email" name="" id="" required>
+                    <input type="email" name="emailNewUser" id="emailNewUser" required>
                     <label for="#">Email</label>
                 </div>
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-lock"></i></span>
-                    <input type="password" name="password" id="password">
+                    <input type="password" name="passwordNewUser" id="passwordNewUser">
                     <label for="#">Contraseña</label>
                 </div>
                 <div class="contenedor-input">
                     <select name="plan" id="plan" required>
-                        <option value="">Selecciona un plan</option>
+                        <option value=""></option>
                         @foreach ($planes as $plan)
                             <option value="{{ $plan->id }}">{{ Str::ucfirst($plan->nombre_plan) }}
                                 {{ number_format($plan->monto, 0, ',', '.') }} + IVA ({{ $plan->numero_clases }} clases)
@@ -76,13 +76,13 @@
                 </div>
                 <div class="contenedor-input">
                     <select name="payment" id="payment" required>
-                        <option value="">Selecciona un medio de pago</option>
+                        <option value=""></option>
                         <option value="khipu">Khipu</option>
                     </select>
                     <label for="#">Metodo de pago</label>
                 </div>
 
-                <button type="submit" class="btn">Pagar y registrarse</button>
+                <button type="button" class="btn btn-registrar">Pagar y registrarse</button>
 
                 <div class="registrar">
                     <p>¿Tienes cuenta? <a href="#" class="login-link">Inicia sesion</a></p>
@@ -95,7 +95,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="//storage.googleapis.com/installer/khipu-2.0.js"></script>
     <script>
-        $('#payment, #plan').on('change', function() {
+        $('.btn-registrar').on('click touchstart', function() {
             paymentBtn();
         })
 
@@ -108,6 +108,9 @@
                     mode: $('#payment').val(),
                     plan: $('#plan').val(),
                     amount: responsePlan.data[0].monto,
+                    user: $('#nameNewUser').val(),
+                    email: $('#emailNewUser').val(),
+                    password: $('#passwordNewUser').val()
                 }
 
                 let urlPayment = '{{ route('payments.crear-pago') }}';
@@ -115,9 +118,6 @@
                     console.log(responsePaymentCreation);
                 })
             })
-
-
-
         }
     </script>
 

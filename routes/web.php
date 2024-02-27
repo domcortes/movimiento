@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PlanesController;
 use App\Http\Controllers\ProfesoresController;
+use App\Http\Controllers\SystemController;
 use App\Models\Planes;
 use Illuminate\Support\Facades\Route;
 
@@ -67,5 +68,9 @@ Route::resource('planes', PlanesController::class);
 Route::get('planes/get-plan/{id}', [PlanesController::class, 'getPlanFromId']);
 
 Route::group(['prefix' => 'payments'], function () {
-    Route::post('/create-payment', [\App\Http\Controllers\SystemController::class, 'crearPago'])->name('payments.crear-pago');
+    Route::post('/create-payment', [SystemController::class, 'crearPago'])->name('payments.crear-pago');
+    Route::get('/notification/khipu/{$identifcation}', [SystemController::class, 'notificarPagoKhipu']);
+
+    Route::get('return-url-khipu/{identification}', [SystemController::class, 'returnUrlKhipu'])->name('payments.return-khipu');
+    Route::get('cancel-url-khipu/{identification}', [SystemController::class, 'cancelUrlKhipu'])->name('payments.cancel-khipu');
 });

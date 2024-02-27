@@ -98,7 +98,7 @@ header {
 }
 
 .fondo.active {
-    height: 455px;
+    height: 600px;
 }
 
 .fondo .contenedor-form {
@@ -197,6 +197,7 @@ header {
     padding: 0 35px 0 5px;
 }
 
+.contenedor-input select:focus~label,
 .contenedor-input select:valid~label {
     top: -5px;
 }
