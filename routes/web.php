@@ -68,9 +68,8 @@ Route::resource('planes', PlanesController::class);
 Route::get('planes/get-plan/{id}', [PlanesController::class, 'getPlanFromId']);
 
 Route::group(['prefix' => 'payments'], function () {
-    Route::post('/create-payment', [SystemController::class, 'crearPago'])->name('payments.crear-pago');
-    Route::get('/notification/khipu/{$identifcation}', [SystemController::class, 'notificarPagoKhipu']);
-
-    Route::get('return-url-khipu/{identification}', [SystemController::class, 'returnUrlKhipu'])->name('payments.return-khipu');
-    Route::get('cancel-url-khipu/{identification}', [SystemController::class, 'cancelUrlKhipu'])->name('payments.cancel-khipu');
+    Route::post('crear-pago-tbk', [SystemController::class, 'crearPago'])->name('payments.crearPago');
+    Route::get('respuesta-tbk/{hash}', [SystemController::class, 'respuestaTbk'])->name('payments.respuestaTbk');
+    Route::get('transbank/{hash}/{pago}', [SystemController::class, 'redireccionTbk'])->name('payments.redireccionTbk');
+    Route::get('transbank/fallo', [SystemController::class, 'redireccionTbkFallo'])->name('payments.redireccionTbkFallo');
 });

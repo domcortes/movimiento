@@ -280,3 +280,7 @@ header {
         height: 700px;
     }
 }
+
+#webpayForm {
+    display: none;
+}

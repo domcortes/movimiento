@@ -51,17 +51,17 @@
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-user"></i></span>
                     <input type="text" name="nameNewUser" id="nameNewUser" required>
-                    <label for="#">Ingresa tu nombre</label>
+                    <label id="labelNombre" for="#">Ingresa tu nombre</label>
                 </div>
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-envelope"></i></span>
                     <input type="email" name="emailNewUser" id="emailNewUser" required>
-                    <label for="#">Email</label>
+                    <label id="labelEmail" for="#">Email</label>
                 </div>
                 <div class="contenedor-input">
                     <span class="icono"><i class="fa-solid fa-lock"></i></span>
                     <input type="password" name="passwordNewUser" id="passwordNewUser">
-                    <label for="#">Contraseña</label>
+                    <label id="labelContrasena" for="#">Contraseña</label>
                 </div>
                 <div class="contenedor-input">
                     <select name="plan" id="plan" required>
@@ -72,22 +72,14 @@
                             </option>
                         @endforeach
                     </select>
-                    <label for="#">Plan</label>
+                    <label id="labelPlan" for="#">Plan</label>
                 </div>
-                <div class="contenedor-input">
-                    <select name="payment" id="payment" required>
-                        <option value=""></option>
-                        <option value="khipu">Khipu</option>
-                    </select>
-                    <label for="#">Metodo de pago</label>
-                </div>
-
-                <button type="button" class="btn btn-registrar">Pagar y registrarse</button>
-
+                <button type="button" id="btnRegistrar" class="btn btn-registrar">Registrar</button>
                 <div class="registrar">
                     <p>¿Tienes cuenta? <a href="#" class="login-link">Inicia sesion</a></p>
                 </div>
             </form>
+            <div id="webpaySection"></div>
         </div>
     </div>
     <script src="{{ asset('vendor/adminlte/dist/js/app.js') }}"></script>
@@ -105,7 +97,6 @@
             $.get(getPlanUrl).done(function(responsePlan) {
                 let paymentObject = {
                     _token: '{{ csrf_token() }}',
-                    mode: $('#payment').val(),
                     plan: $('#plan').val(),
                     amount: responsePlan.data[0].monto,
                     user: $('#nameNewUser').val(),
@@ -113,9 +104,22 @@
                     password: $('#passwordNewUser').val()
                 }
 
-                let urlPayment = '{{ route('payments.crear-pago') }}';
+                let urlPayment = '{{ route('payments.crearPago') }}';
                 $.post(urlPayment, paymentObject).done(function(responsePaymentCreation) {
-                    console.log(responsePaymentCreation);
+                    if (responsePaymentCreation.result) {
+                        $('#nameNewUser').prop('disabled', true)
+                        $('#emailNewUser').prop('disabled', true)
+                        $('#passwordNewUser').prop('disabled', true)
+                        $('#plan').prop('disabled', true)
+
+                        $('#labelNombre').hide();
+                        $('#labelEmail').hide();
+                        $('#labelContrasena').hide();
+                        $('#labelPlan').hide();
+
+                        $('#btnRegistrar').hide();
+                        $('#webpaySection').html(responsePaymentCreation.form)
+                    }
                 })
             })
         }

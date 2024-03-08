@@ -24,7 +24,6 @@ class CreateNewStudentRequest extends FormRequest
     public function rules()
     {
         return [
-            'mode' => 'required|string',
             'plan' => 'required|string',
             'user' => 'required|string',
             'email' => 'required|email',

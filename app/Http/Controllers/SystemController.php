@@ -11,14 +11,16 @@ use ErrorException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\QueryException;
-use Khipu\Configuration as KhipuConfiguration;
-use Khipu\ApiClient as KhipuApiClient;
-use Khipu\Client\PaymentsApi as KhipuClientPaymentsApi;
-use Khipu\ApiException as KhipuApiException;
+use Illuminate\Http\Request;
+use Transbank\Webpay\WebpayPlus\Transaction;
 use Illuminate\Support\Facades\Hash;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SystemController extends Controller
 {
+    const CODIGO_COMERCIO = '597055555532';
+    const CODIGO_SECRETO = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C';
+
     static public function fechaFormateada($fecha)
     {
         return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
@@ -122,160 +124,110 @@ class SystemController extends Controller
 
     public function crearPago(CreateNewStudentRequest $request)
     {
-        $identification = time();
+        $identification = dechex(time());
         $plan = Planes::where('id', $request->plan)->first();
         $hoy = Carbon::now();
 
         try {
+
+
+            \Transbank\Webpay\WebpayPlus::configureForIntegration(
+                self::CODIGO_COMERCIO,
+                self::CODIGO_SECRETO
+            );
+
+            $response = (new Transaction)->create(
+                Hashids::encode($plan->id),
+                $identification,
+                $plan->monto,
+                route('payments.respuestaTbk', $identification)
+            );
+
+            $url = $response->getUrl();
+            $token = $response->getToken();
+
             $nuevoAlumno = new User();
             $nuevoAlumno->name = $request->user;
             $nuevoAlumno->email = $request->email;
-            $nuevoAlumno->rut = 'sin rut';
+            $nuevoAlumno->rut = 'sin rut de '.$request->user;
             $nuevoAlumno->password = Hash::make($request->password);
             $nuevoAlumno->telefono = 'no registrado';
             $nuevoAlumno->role = 'alumno';
             $nuevoAlumno->disciplina = json_encode([]);
             $nuevoAlumno->tipo_matricula = $plan->nombre_plan;
+            $nuevoAlumno->hash = $identification;
+            $nuevoAlumno->status = false;
             $nuevoAlumno->save();
 
-            switch ($request->mode) {
-                default:
-                case 'khipu':
-
-
-                    $receiverId = config('app.khipu_id');
-                    $secretKey = config('app.khipu_key');
-
-                    $configuration = new KhipuConfiguration();
-                    $configuration->setReceiverId($receiverId);
-                    $configuration->setSecret($secretKey);
-
-                    $client = new KhipuApiClient($configuration);
-                    $payments = new KhipuClientPaymentsApi($client);
-
-                    try {
-                        $opts = [
-                            "transaction_id" => $identification,
-                            "return_url" => route('payments.return-khipu', $identification),
-                            "cancel_url" => route('payments.cancel-khipu', $identification),
-                            "picture_url" => "http://mi-ecomerce.com/pictures/foto-producto.jpg",
-                            "notify_url" => secure_url('/') . "/payments/notification/khipu/" . $identification,
-                            "notify_api_version" => "1.3"
-                        ];
-
-                        $response = $payments->paymentsPost(
-                            'Pago mensualidad de ' . $request->user . '',
-                            "clp",
-                            $plan->monto,
-                            $opts
-                        );
-
-                        $pago = new Pagos();
-                        $pago->id_usuario = $nuevoAlumno->id;
-                        $pago->fecha_pago = $hoy->format('Y-m-d');
-                        $pago->fecha_vencimiento = $hoy->format('Y-m-d');
-                        $pago->fecha_inicio_mensualidad = $hoy->format('Y-m-d');
-                        $pago->fecha_termino_mensualidad = $hoy->format('Y-m-d');
-                        $pago->cantidad_clases = $plan->numero_clases;
-                        $pago->medio_pago = 'e-pago';
-                        $pago->primera_mensualidad = false;
-                        $pago->monto = (int) $plan->monto;
-                        $pago->id_profesor = $plan->id_profesor;
-                        $pago->identificacion_pago = $identification;
-                        $pago->plataforma = $request->mode;
-                        $pago->token = $response['payment_id'];
-                        $pago->save();
-
-                        return $response['simplified_transfer_url'];
-                    } catch (KhipuApiException $th) {
-                        return print_r($th->getResponseBody(), true);
-                    }
-                    break;
-            }
-        } catch (ErrorException $th) {
-            return $th->getMessage();
-        } catch (QueryException $th) {
-            return $th->getMessage();
+            return response()->json([
+                'result' => true,
+                'form' => view('pagos.webpayForm', compact('url', 'token'))->render()
+            ]);
+        } catch (ErrorException | QueryException $th) {
+            return response()->json([
+                'result' => false,
+                'form' => 'Sin procesar boton'.$th->getMessage()
+            ]);
         }
     }
 
-    public function notificarPagoKhipu($identification)
+    public function respuestaTbk(Request $request, $identification)
     {
-        try {
-            $receiverId = config('app.khipu_id');
-            $secretKey = config('app.khipu_key');
-            $pagos = Pagos::where('identificacion_pago', $identification)->first();
+        $token = $request->input('token_ws') ?? null;
+        if (!$token) {
+            die('No es un flujo de pago normal.');
+        }
 
-            $configuration = new KhipuConfiguration();
-            $configuration->setSecret($secretKey);
-            $configuration->setReceiverId($receiverId);
+        $response = (new Transaction)->commit($token);
+        $authCode = $response->getAuthorizationCode();
 
-            // $configuration->setDebug(true);
+        $usuario = User::where('hash', $identification)->first();
+        $plan = Planes::where('id', Hashids::decode($response->getBuyOrder())[0])
+            ->first();
 
-            $client = new KhipuApiClient($configuration);
-            $payments = new KhipuClientPaymentsApi($client);
+        if ($response->isApproved()) {
+            $hoy = Carbon::now();
 
-            $response = $payments->paymentsGet($identification);
-            if ($response->getReceiverId() == $receiverId) {
-                if ($response->getStatus() == 'done' && $response->getAmount() == $pagos->monto) {
-                    error_log('done');
-                    $pagos->status_pago = true;
-                    $pagos->save();
-                }
-            } else {
-                error_log('not done');
-            }
-        } catch (KhipuApiException $exception) {
-            print_r($exception->getResponseObject());
+            $pago = new Pagos();
+            $pago->id_usuario = $usuario->id;
+            $pago->fecha_pago = $hoy->format('Y-m-d');
+            $pago->fecha_inicio_mensualidad = $hoy->format('Y-m-d');
+            $pago->fecha_vencimiento = $hoy->addDays(30)->format('Y-m-d');
+            $pago->fecha_termino_mensualidad = $hoy->addDays(30)->format('Y-m-d');
+            $pago->cantidad_clases = $plan->numero_clases;
+            $pago->medio_pago = 'e-pago';
+            $pago->primera_mensualidad = true;
+            $pago->monto = $response->getAmount();;
+            $pago->id_profesor = $plan->id_profesor;
+            $pago->identificacion_pago = $authCode;
+            $pago->plataforma = 'webpay';
+            $pago->status_pago = true;
+            $pago->token = $token;
+            $pago->save();
+
+            $usuario->status = true;
+            $usuario->save();
+
+            return redirect()->route('payments.redireccionTbk', [
+                $identification, $authCode
+            ] );
+        } else {
+            $usuario->delete();
+            return redirect()->route('payments.redireccionTbkFallo');
         }
     }
 
-    public function returnUrlKhipu($identification)
-    {
-        $message = 'retorno de ' . $identification;
+    public function redireccionTbk($hash, $pago){
+        $usuario = User::where('hash', $hash)->first();
+        $pago = Pagos::where('identificacion_pago', $pago)->first();
 
-        try {
-            $receiverId = config('app.khipu_id');
-            $secretKey = config('app.khipu_key');
-            $pagos = Pagos::where('identificacion_pago', $identification)->first();
-
-            $notification_token = $pagos->token; //Parámetro notification_token
-            $amount = $pagos->monto;
-            $api_version = '1.3';
-
-            try {
-                if ($api_version == '1.3') {
-                    $configuration = new KhipuConfiguration();
-                    $configuration->setSecret($secretKey);
-                    $configuration->setReceiverId($receiverId);
-                    // $configuration->setDebug(true);
-
-                    $client = new KhipuApiClient($configuration);
-                    $payments = new KhipuClientPaymentsApi($client);
-
-                    $response = $payments->paymentsGet($notification_token);
-                    if ($response->getReceiverId() == $receiverId) {
-                        if ($response->getStatus() == 'done' && $response->getAmount() == $amount) {
-                            // marcar el pago como completo y entregar el bien o servicio
-                        }
-                    } else {
-                        // receiver_id no coincide
-                    }
-                } else {
-                    // Usar versión anterior de la API de notificación
-                }
-            } catch (KhipuApiException $exception) {
-                print_r($exception->getResponseObject());
-            }
-        } catch (KhipuApiException $exception) {
-            print_r($exception->getResponseObject());
-        }
+        dd([
+            $usuario,
+            $pago
+        ]);
     }
 
-    public function cancelUrlKhipu($identification)
-    {
-        $message = 'cancelacion de ' . $identification;
-
-        return $message;
+    public function redireccionTbkFallo(){
+        return 'pago fallo';
     }
 }
