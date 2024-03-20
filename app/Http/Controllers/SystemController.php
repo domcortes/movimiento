@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateNewStudentRequest;
+use App\Mail\WelcomeMail;
 use App\Models\Pagos;
 use App\Models\Planes;
 use App\Models\User;
@@ -14,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Transbank\Webpay\WebpayPlus\Transaction;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SystemController extends Controller
@@ -221,10 +223,12 @@ class SystemController extends Controller
         $usuario = User::where('hash', $hash)->first();
         $pago = Pagos::where('identificacion_pago', $pago)->first();
 
-        dd([
-            $usuario,
-            $pago
-        ]);
+        $mailBienvenida = new WelcomeMail($usuario);
+        Mail::to($usuario->email)->send($mailBienvenida);
+
+        return redirect()->route('welcome')->with('success','Registro y pago creado correctamente. Revisa tu mail');
+
+        //mail de pago
     }
 
     public function redireccionTbkFallo(){

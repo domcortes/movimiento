@@ -64,7 +64,7 @@ return [
     */
 
     'logo' => '<b>Movimiento</b>',
-    'logo_img' => 'vendor/adminlte/dist/img/leglockTransparente.png',
+    'logo_img' => 'vendor/adminlte/dist/img/logo4.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -86,7 +86,7 @@ return [
     'auth_logo' => [
         'enabled' => false,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/leglockTransparente.png',
+            'path' => 'vendor/adminlte/dist/img/logo4.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 70,
@@ -109,11 +109,11 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/leglockTransparente.png',
+            'path' => 'vendor/adminlte/dist/img/logo4.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
-            'width' => 100,
-            'height' => 100,
+            'width' => 300,
+            'height' => 300,
         ],
     ],
 
@@ -211,7 +211,7 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => false,
+    'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
@@ -292,100 +292,77 @@ return [
     'menu' => [
         // Navbar items:
         [
-            'type'         => 'fullscreen-widget',
+            'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
 
         // Sidebar items:
         [
             'text' => 'blog',
-            'url'  => 'admin/blog',
-            'can'  => 'manage-blog',
+            'url' => 'admin/blog',
+            'can' => 'manage-blog',
         ],
         [
             'text' => 'Usuarios',
             'url' => 'usuarios',
-            'icon' => 'fa-solid fa-money-bill'
+            'icon' => 'fa-solid fa-money-bill',
+            'can' => [
+                'superadmin-menu',
+                'admin-menu',
+            ]
         ],
         [
             'text' => 'Pagos',
             'url' => 'pagos',
-            'icon' => 'fa-solid fa-money-bill'
+            'icon' => 'fa-solid fa-money-bill',
+            'can' => [
+                'superadmin-menu',
+                'admin-menu',
+                'profesor-menu',
+            ]
         ],
         [
             'text' => 'Asistencias',
             'url' => 'asistencias',
-            'icon' => 'fa-solid fa-sheet-plastic'
+            'icon' => 'fa-solid fa-sheet-plastic',
+            'can' => [
+                'superadmin-menu',
+                'admin-menu',
+                'profesor-menu',
+            ]
         ],
         [
             'text' => 'Profesores',
             'url' => 'profesores',
-            'icon' => 'fa-solid fa-sheet-plastic'
+            'icon' => 'fa-solid fa-sheet-plastic',
+            'can' => [
+                'superadmin-menu',
+                'admin-menu',
+            ]
+        ],
+        [
+            'text' => 'Alumnos',
+            'url' => 'alumnos',
+            'icon' => 'fa-solid fa-sheet-plastic',
+            'can' => [
+                'superadmin-menu',
+                'admin-menu',
+                'profesor-menu',
+            ]
+        ],
+        [
+            'text' => 'Mis planes y pagos',
+            'url' => 'planes',
+            'icon' => 'fa-solid fa-solar-panel',
+            'can' => [
+                'alumno-menu'
+            ],
         ],
         ['header' => 'account_settings'],
         [
-            'text' => 'profile',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
             'text' => 'change_password',
-            'url'  => 'admin/settings',
+            'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text'       => 'important',
-            'icon_color' => 'red',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'warning',
-            'icon_color' => 'yellow',
-            'url'        => '#',
-        ],
-        [
-            'text'       => 'information',
-            'icon_color' => 'cyan',
-            'url'        => '#',
         ],
     ],
 
@@ -586,9 +563,14 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '//cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js'
-                ]
-            ]
-        ]
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-es-ES.min.js'
+                ],
+            ],
+        ],
     ],
 
     /*

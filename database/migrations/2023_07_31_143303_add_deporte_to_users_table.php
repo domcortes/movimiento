@@ -14,7 +14,7 @@ class AddDeporteToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('disciplina');
+            $table->string('disciplina')->default(json_encode([]));
         });
     }
 

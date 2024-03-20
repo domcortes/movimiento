@@ -8,6 +8,10 @@
     <script src="https://kit.fontawesome.com/a2dd6045c4.js" crossorigin="anonymous"></script>
     <title>{{ config('adminlte.title') }}</title>
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/style.css') }}">
+
+
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -83,9 +87,9 @@
         </div>
     </div>
     <script src="{{ asset('vendor/adminlte/dist/js/app.js') }}"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="//storage.googleapis.com/installer/khipu-2.0.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
     <script>
         $('.btn-registrar').on('click touchstart', function() {
             paymentBtn();
@@ -124,6 +128,11 @@
             })
         }
     </script>
+    @if (session('success'))
+        <script>
+            toastr.success("{{ session('success') }}")
+        </script>
+    @endif
 
 </body>
 

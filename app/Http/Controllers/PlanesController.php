@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pagos;
 use App\Models\Planes;
+use App\Models\User;
 use ErrorException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -16,7 +18,9 @@ class PlanesController extends Controller
      */
     public function index()
     {
-        //
+        $misPlanes = $this->getPagos(auth()->user()->id);
+        $usuario = User::find(auth()->user()->id);
+        return view('alumnos.planes.index', compact('misPlanes', 'usuario'));
     }
 
     /**
@@ -42,6 +46,7 @@ class PlanesController extends Controller
             $plan = new Planes();
             $plan->id_profesor = $request->teacher;
             $plan->numero_clases = (integer) $request->clases;
+            $plan->nombre_plan = $request->nombrePlan;
             $plan->monto = (integer) $request->monto;
             $plan->estado = true;
             $plan->save();
@@ -118,7 +123,8 @@ class PlanesController extends Controller
         //
     }
 
-    public function getPlanFromId($id){
+    public function getPlanFromId($id)
+    {
         $result = false;
         $data = [];
         try {
@@ -136,5 +142,25 @@ class PlanesController extends Controller
             'message' => $message,
             'data' => $data
         ]);
+    }
+
+    static public function getPagos($id)
+    {
+        $pagos = Pagos::select(
+            "pagos.fecha_pago",
+            "pagos.id",
+            "usuario.name as nombre_usuario",
+            "profesor.name as nombre_profesor",
+            "pagos.fecha_inicio_mensualidad as fecha_inicio_mensualidad",
+            "pagos.fecha_termino_mensualidad as fecha_termino_mensualidad",
+            "pagos.cantidad_clases as cantidad_clases",
+            "pagos.monto as monto",
+        )
+            ->join("users as usuario", "pagos.id_usuario", "=", "usuario.id")
+            ->join("users as profesor", "pagos.id_profesor", "=", "profesor.id")
+            ->where("usuario.id", $id)
+            ->get();
+
+        return $pagos;
     }
 }

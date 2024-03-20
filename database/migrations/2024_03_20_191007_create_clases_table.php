@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTelefonoToUsersTable extends Migration
+class CreateClasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,13 @@ class AddTelefonoToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('telefono')->default('');
+        Schema::create('clases', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('id_pago');
+            $table->bigInteger('id_creador');
+            $table->date('fecha');
+            $table->longText('contenido');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ class AddTelefonoToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('clases');
     }
 }

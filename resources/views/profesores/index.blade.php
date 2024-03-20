@@ -11,8 +11,10 @@
                             Listado de Profesores
                         </div>
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-primary float-right" data-toggle="modal"
-                                data-target="#modalCrearUsuario">Agregar profesor</button>
+                            <div class="btn-group float-right">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCrearUsuario">Agregar profesor</button>
+                                <button type="button" class="btn btn-secondary planes" data-toggle="modal" data-target="#modalPlanes">Crear plan</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -36,15 +38,8 @@
                                     <td><a href="tel:+{{ $profesor->telefono }}">+{{ $profesor->telefono }}</a></td>
                                     <td>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-primary contenido"
-                                                teacher='{{ $profesor->id }}' data-toggle="modal"
-                                                data-target="#exampleModalLong">
+                                            <button type="button" class="btn btn-primary contenido" teacher='{{ $profesor->id }}' data-toggle="modal" data-target="#exampleModalLong">
                                                 <i class="fa-solid fa-arrows-to-circle"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-secondary planes"
-                                                teacher='{{ $profesor->id }}' data-toggle="modal"
-                                                data-target="#modalPlanes">
-                                                <i class="fa-solid fa-ruler-combined"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -181,7 +176,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-dark">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Crear contenido</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Crear plan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -204,6 +199,14 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="">Nombre de plan</label>
+                                                    <input type="text" name="nombrePlan" id="nombrePlan" class="form-control" required>
                                                 </div>
                                             </div>
                                         </div>

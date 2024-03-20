@@ -14,8 +14,8 @@ class AddRoleAndRutColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('rut')->unique();
-            $table->string('role');
+            $table->string('rut')->unique()->nullable();
+            $table->string('role')->default('admin');
         });
     }
 

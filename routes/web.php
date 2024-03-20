@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\PlanesController;
 use App\Http\Controllers\ProfesoresController;
+use App\Http\Controllers\AlumnosController;
+use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\SystemController;
 use App\Models\Planes;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +38,7 @@ Route::get('/', function () {
     $planes = Planes::all();
 
     return view('welcome', compact('logoSeleccionado', 'planes'));
-});
+})->name('welcome');
 
 Auth::routes();
 
@@ -63,7 +65,9 @@ Route::group(['prefix' => 'informaciones'], function () {
 });
 
 Route::resource('profesores', ProfesoresController::class);
+Route::resource('alumnos', AlumnosController::class);
 Route::resource('planes', PlanesController::class);
+Route::resource('clases', ClasesController::class);
 
 Route::get('planes/get-plan/{id}', [PlanesController::class, 'getPlanFromId']);
 
