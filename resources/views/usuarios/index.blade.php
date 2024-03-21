@@ -22,6 +22,7 @@
                             <th>Nombre Alumno</th>
                             <th>Rol</th>
                             <th>Email</th>
+                            <th>Rut</th>
                             <th>Deportes</th>
                             <th>Teléfono</th>
                             <th>Acciones</th>
@@ -33,6 +34,7 @@
                                 <td>{{ $alumno->name }}</td>
                                 <td>{{ $alumno->role }}</td>
                                 <td><a href="mailto:{{ $alumno->email }}">{{ $alumno->email }}</a></td>
+                                <td>{{ $alumno->rut }}</td>
                                 <td>{{ $alumno->disciplina }}</td>
                                 <td><a href="tel:+{{ $alumno->telefono }}">+{{ $alumno->telefono }}</a></td>
                                 <td>
