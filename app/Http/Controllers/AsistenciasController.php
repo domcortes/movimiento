@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asistencias;
+use App\Models\Clases;
 use App\Models\Pagos;
 use App\Models\User;
+use Carbon\Carbon;
+use ErrorException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -170,5 +173,63 @@ class AsistenciasController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function buscarClases(Request $request)
+    {
+        $result = false;
+        $data = null;
+
+        try {
+            $usuario = User::where('rut', $request->rut)->first();
+            $hoy = Carbon::now()->format('Y-m-d');
+            $pagos = Pagos::where('fecha_inicio_mensualidad', '<=', $hoy)
+                ->where('fecha_termino_mensualidad', '>=', $hoy)
+                ->where('id_usuario', $usuario->id)
+                ->first();
+
+            if ($pagos !== null) {
+                $clases = Clases::where('id_pago', $pagos->id)->get();
+
+                if ($clases !== null) {
+                    $data = $clases;
+                    $message = 'Data catch';
+                    $result = true;
+                } else {
+                    $message = 'No plan founded';
+                }
+            } else {
+                $message = 'No plan founded';
+            }
+        } catch (ErrorException | QueryException $th) {
+            $message = "Error " . $th->getMessage();
+        }
+
+        return response()->json([
+            'result' => $result,
+            'message' => $message,
+            'data' => $data
+        ]);
+    }
+
+    public function marcarAsistencia(Request $request){
+        $result = false;
+
+        try {
+            $usuario = User::where('rut', $request->rut)->first();
+            $clase = Clases::where('fecha', $request->clase)->first();
+            $clase->marcada = true;
+            $clase->save();
+
+            $message = 'Clase marcada presente exitosamente';
+            $result = true;
+        } catch (QueryException | ErrorException $th) {
+            $message = 'Error '.$th->getMessage();
+        }
+
+        return response()->json([
+            'result' => $result,
+            'message' => $message
+        ]);
     }
 }

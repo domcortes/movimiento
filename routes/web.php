@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PlanesController;
+use App\Http\Controllers\AsistenciasController;
 use App\Http\Controllers\ProfesoresController;
 use App\Http\Controllers\AlumnosController;
 use App\Http\Controllers\ClasesController;
@@ -39,6 +40,34 @@ Route::get('/', function () {
 
     return view('welcome', compact('logoSeleccionado', 'planes'));
 })->name('welcome');
+
+
+Route::group(['prefix' => 'asistencia'], function () {
+    Route::get('/', function () {
+        $logos = [
+            'vendor/adminlte/dist/img/logo1.png',
+            'vendor/adminlte/dist/img/logo2.png',
+            'vendor/adminlte/dist/img/logo3.png',
+            'vendor/adminlte/dist/img/logo4.png',
+            'vendor/adminlte/dist/img/logo5.png',
+            'vendor/adminlte/dist/img/logo6.png',
+            'vendor/adminlte/dist/img/logo7.png',
+            'vendor/adminlte/dist/img/logo8.png',
+            'vendor/adminlte/dist/img/logo9.png'
+        ];
+
+        $indiceAzar = array_rand($logos);
+        $logoSeleccionado = $logos[$indiceAzar];
+
+        $planes = Planes::all();
+
+        return view('asistencia', compact('logoSeleccionado', 'planes'));
+    })->name('asistencia');
+
+    Route::post('buscar-clases', [AsistenciasController::class, 'buscarClases'])->name('asistencia.buscarClases');
+    Route::post('marcar-asistencia', [AsistenciasController::class, 'marcarAsistencia'])->name('asistencia.marcar');
+});
+
 
 Auth::routes();
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTokenToPagosTable extends Migration
+class AddMarcadaToClasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddTokenToPagosTable extends Migration
      */
     public function up()
     {
-        Schema::table('pagos', function (Blueprint $table) {
-            $table->string('token')->nullable();
-            $table->bigInteger('monto')->default(0);
+        Schema::table('clases', function (Blueprint $table) {
+            $table->boolean('marcada')->default(false);
         });
     }
 
@@ -26,8 +25,8 @@ class AddTokenToPagosTable extends Migration
      */
     public function down()
     {
-        Schema::table('pagos', function (Blueprint $table) {
-            //
+        Schema::table('clases', function (Blueprint $table) {
+            $table->dropColumn('marcada');
         });
     }
 }

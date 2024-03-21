@@ -24,30 +24,22 @@
     <div class="fondo active-btn">
         <div class="contenedor-form login">
             <h2>Iniciar sesion</h2>
-            <form action="{{ route('login') }}" method="post">
-                @csrf
-                <div class="contenedor-input">
-                    <span class="icono"><i class="fa-solid fa-envelope"></i></span>
-                    <input type="email" name="email" id="email" autocomplete="off">
-                    <label for="#">Email</label>
-                </div>
+            <div class="contenedor-input">
+                <input type="text" name="rut" id="rut" autocomplete="off">
+                <label for="#">Rut</label>
+            </div>
+            <div class="contenedor-input">
+                <span class="icono"></span>
+                <select name="clase" id="clase">
+                    <option value="">Selecciona una clase</option>
+                </select>
+                <label for="#">Clases disponibles</label>
+            </div>
 
-                <div class="contenedor-input">
-                    <span class="icono"><i class="fa-solid fa-lock"></i></span>
-                    <input type="password" name="password" id="password">
-                    <label for="#">Password</label>
-                </div>
-
-                <div class="recordar">
-                    <a href="#"><small>¿No recuerda contraseña?</small></a>
-                    <a href="{{ route('asistencia') }}"><small>Marcar asistencia</small></a>
-                </div>
-
-                <button type="submit" class="btn">Iniciar sesion</button>
-                <div class="registrar">
-                    <p>¿No tienes cuenta? <a href="#" class="registrar-link">Registrate</a></p>
-                </div>
-            </form>
+            <button type="button" class="btn" id="goToPanel">Acceder a mi panel</button>
+            <div class="registrar">
+                <p>¿No tienes cuenta? <a href="#" class="registrar-link">Registrate</a></p>
+            </div>
         </div>
 
         <div class="contenedor-form registrar">
@@ -81,7 +73,8 @@
                 </div>
                 <button type="button" id="btnRegistrar" class="btn btn-registrar">Registrar</button>
                 <div class="registrar">
-                    <p>¿Tienes cuenta? <a href="#" class="login-link">Inicia sesion</a></p>
+                    <p>¿Tienes cuenta?<br><a href="#" class="login-link">Inicia sesion o marca tu asistencia</a>
+                    </p>
                 </div>
             </form>
             <div id="webpaySection"></div>
@@ -90,8 +83,76 @@
     <script src="{{ asset('vendor/adminlte/dist/js/app.js') }}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+        $(document).ready(function() {
+            $('#rut').focus();
+        })
+
+        $('#goToPanel').on('click touchstart', function() {
+            location.href = "{{ route('welcome') }}"
+        })
+
+        $('#rut').on('input', function() {
+            let rut = $(this).val();
+            let length = rut.length;
+
+            if (length >= 9) {
+                let url = "{{ route('asistencia.buscarClases') }}"
+                let clasesDisponiblesData = {
+                    _token: '{{ csrf_token() }}',
+                    rut
+                }
+
+                $.post(url, clasesDisponiblesData).done(function(response) {
+                    $('#clase').empty();
+                    $('#clase').append('<option value="">Selecciona una clase</option>');
+
+                    $.each(response.data, function(key, value) {
+                        $('#clase').append($('<option>', {
+                            value: value.fecha,
+                            text: "Clase del " + value.fecha
+                        }));
+                    });
+
+                    $('#clase').on('change', function() {
+                        let clase = $('#clase').val();
+
+                        swal.fire({
+                            icon: 'question',
+                            title: 'Accion de marca de asistencia',
+                            html: '¿Deseas marcar asistencia a la clase de ' + clase + '?<br>Esta accion es <strong>irreversible</strong>',
+                            showConfirmButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: 'Marcar asistencia',
+                            cancelButtonText: 'Cancelar accion'
+                        }).then((result) => {
+                            if (result.value) {
+                                let urlMarca = "{{ route('asistencia.marcar') }}"
+                                let asistenciaMark = {
+                                    _token: "{{ csrf_token() }}",
+                                    clase,
+                                    rut
+                                }
+
+                                $.post(urlMarca, asistenciaMark)
+                                .done(function (response) {
+                                    response.result ?
+                                    toastr.success(response.message) :
+                                    toastr.error(response.message)
+                                })
+
+                            } else {
+                                toastr.info('Accion cancelada por el usuario')
+                            }
+                        })
+                    })
+                })
+            }
+
+        })
+
         $('.btn-registrar').on('click touchstart', function() {
             paymentBtn();
         })

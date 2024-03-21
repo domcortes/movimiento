@@ -220,11 +220,15 @@ class SystemController extends Controller
     }
 
     public function redireccionTbk($hash, $pago){
-        $usuario = User::where('hash', $hash)->first();
-        $pago = Pagos::where('identificacion_pago', $pago)->first();
+        try {
+            $usuario = User::where('hash', $hash)->first();
+            $pago = Pagos::where('identificacion_pago', $pago)->first();
 
-        $mailBienvenida = new WelcomeMail($usuario);
-        Mail::to($usuario->email)->send($mailBienvenida);
+            $mailBienvenida = new WelcomeMail($usuario);
+            Mail::to($usuario->email)->send($mailBienvenida);
+        } catch (QueryException | ErrorException $th) {
+            $th->getMessage();
+        }
 
         return redirect()->route('welcome')->with('success','Registro y pago creado correctamente. Revisa tu mail');
 
