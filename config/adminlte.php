@@ -305,7 +305,7 @@ return [
         [
             'text' => 'Usuarios',
             'url' => 'usuarios',
-            'icon' => 'fa-solid fa-money-bill',
+            'icon' => 'fa-solid fa-users',
             'can' => [
                 'superadmin-menu',
                 'admin-menu',
@@ -324,7 +324,7 @@ return [
         [
             'text' => 'Asistencias',
             'url' => 'asistencias',
-            'icon' => 'fa-solid fa-sheet-plastic',
+            'icon' => 'fa-solid fa-clipboard',
             'can' => [
                 'superadmin-menu',
                 'admin-menu',
@@ -334,7 +334,7 @@ return [
         [
             'text' => 'Profesores',
             'url' => 'profesores',
-            'icon' => 'fa-solid fa-sheet-plastic',
+            'icon' => 'fa-solid fa-person-chalkboard',
             'can' => [
                 'superadmin-menu',
                 'admin-menu',
@@ -343,7 +343,7 @@ return [
         [
             'text' => 'Alumnos',
             'url' => 'alumnos',
-            'icon' => 'fa-solid fa-sheet-plastic',
+            'icon' => 'fa-solid fa-graduation-cap',
             'can' => [
                 'superadmin-menu',
                 'admin-menu',
