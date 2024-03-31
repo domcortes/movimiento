@@ -36,7 +36,14 @@ Route::get('/', function () {
     $indiceAzar = array_rand($logos);
     $logoSeleccionado = $logos[$indiceAzar];
 
-    $planes = Planes::all();
+    $planes = Planes::select(
+        'planes.nombre_plan as nombre_plan',
+        'planes.numero_clases as numero_clases',
+        'planes.monto as monto',
+        'users.name as nombreProfesor'
+    )->join('users', 'planes.id_profesor', '=', 'users.id')
+        ->where('estado', true)
+        ->get();
 
     return view('welcome', compact('logoSeleccionado', 'planes'));
 })->name('welcome');

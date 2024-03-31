@@ -73,7 +73,7 @@
                         <option value=""></option>
                         @foreach ($planes as $plan)
                             <option value="{{ $plan->id }}">{{ Str::ucfirst($plan->nombre_plan) }}
-                                {{ number_format($plan->monto, 0, ',', '.') }} + IVA ({{ $plan->numero_clases }} clases)
+                                {{ number_format($plan->monto, 0, ',', '.') }} + IVA ({{ $plan->numero_clases }} clases) - Profesor: {{ $plan->nombreProfesor }}
                             </option>
                         @endforeach
                     </select>
