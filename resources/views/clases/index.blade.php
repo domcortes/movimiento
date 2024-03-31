@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-6">
             <div class="btn-group float-right">
-                @if (auth()->user()->role === 'profesor' || auth()->user()->role === 'admin')
+                @if (auth()->user()->role === 'profesor' || auth()->user()->role === 'admin' || auth()->user()->role === 'superadmin')
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalContenido">Nuevo contenido</button>
                 @endif
             </div>
