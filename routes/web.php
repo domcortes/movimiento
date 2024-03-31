@@ -37,6 +37,7 @@ Route::get('/', function () {
     $logoSeleccionado = $logos[$indiceAzar];
 
     $planes = Planes::select(
+        'planes.id as id',
         'planes.nombre_plan as nombre_plan',
         'planes.numero_clases as numero_clases',
         'planes.monto as monto',
