@@ -16,7 +16,10 @@ class ProfesoresController extends Controller
      */
     public function index()
     {
-        $profesores = User::where('role', '=', 'profesor')->get();
+        $profesores = User::whereIn('role', [
+            'profesor',
+            'admin'
+        ])->get();
         $alumnos = User::where('role', '!=', 'profesor')->get();
         return view('profesores.index', compact('profesores', 'alumnos'));
     }
